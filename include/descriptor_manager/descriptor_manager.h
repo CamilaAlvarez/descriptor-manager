@@ -1,0 +1,14 @@
+//
+// Created by Camila Alvarez on 13-03-17.
+//
+
+#ifndef DESCRIPTOR_MANAGER_DESCRIPTORMANAGER_HPP
+#define DESCRIPTOR_MANAGER_DESCRIPTORMANAGER_HPP
+
+
+class DescriptorManager {
+
+};
+
+
+#endif //DESCRIPTOR_MANAGER_DESCRIPTORMANAGER_HPP
