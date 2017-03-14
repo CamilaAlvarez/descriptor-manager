@@ -10,10 +10,12 @@
 
 class ConfigFile {
 public:
-    ConfigFile(std::string file, std::string separator = "\t");
-
+    ConfigFile(const std::string &file, const std::string &separator = "\t");
+    std::string getValueForKey(const std::string &key);
 private:
     std::map<std::string, std::string> config_map;
+    void loadConfigFileToMap(const std::string &file, const std::string &separator);
+
 };
 
 

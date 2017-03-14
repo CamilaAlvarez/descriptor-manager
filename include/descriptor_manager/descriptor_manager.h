@@ -7,14 +7,16 @@
 
 #include <iostream>
 #include "caffe/net.hpp"
+#include "descriptor_manager/config_file.h"
 
 class DescriptorManager {
 
 public:
-    explicit DescriptorManager(std::string network_config_file);
-    explicit DescriptorManager()
+    explicit DescriptorManager(std::string network_config_file, std::string separator);
+    explicit DescriptorManager(ConfigFile config_file);
 private:
     caffe::Net net;
+    ConfigFile config_file;
 
 };
 
