@@ -5,9 +5,15 @@
 #ifndef DESCRIPTOR_MANAGER_CONFIGFILE_HPP
 #define DESCRIPTOR_MANAGER_CONFIGFILE_HPP
 
+#include <iostream>
+#include <map>
 
 class ConfigFile {
+public:
+    ConfigFile(std::string file, std::string separator = "\t");
 
+private:
+    std::map<std::string, std::string> config_map;
 };
 
 
