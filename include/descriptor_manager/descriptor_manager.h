@@ -15,7 +15,7 @@ public:
     explicit DescriptorManager(std::string network_config_file, std::string separator);
     explicit DescriptorManager(ConfigFile config_file);
 private:
-    caffe::Net net;
+    caffe::Net<float> net;
     ConfigFile config_file;
 
 };

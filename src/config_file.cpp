@@ -6,16 +6,16 @@
 #include <fstream>
 #include <assert.h>
 
-ConfigFile::ConfigFile(std::string file, std::string separator) {
+ConfigFile::ConfigFile(const std::string &file, const std::string &separator) {
     loadConfigFileToMap(file, separator);
 }
 
-void ConfigFile::loadConfigFileToMap(std::string file, std::string separator) {
+void ConfigFile::loadConfigFileToMap(const std::string &file, const std::string &separator) {
     std::ifstream config_file(file);
     //Check if file did open
     assert(config_file.is_open());
     std::string line;
-    while(std::getline(config_file), line){
+    while(std::getline(config_file, line)){
         size_t separator_location = line.find(separator);
         assert(separator_location != std::string::npos);
         std::string config_key = line.substr(0, separator_location);
