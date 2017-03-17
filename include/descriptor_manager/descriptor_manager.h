@@ -6,14 +6,16 @@
 #define DESCRIPTOR_MANAGER_DESCRIPTORMANAGER_HPP
 
 #include <iostream>
-#include "caffe/net.hpp"
+#include "caffe/caffe.hpp"
 #include "descriptor_manager/config_file.h"
+#include "opencv2/imgproc/imgproc.hpp"
 
 class DescriptorManager {
 
 public:
     explicit DescriptorManager(std::string network_config_file, std::string separator);
     explicit DescriptorManager(ConfigFile config_file);
+    float * calculateDescriptorForImage(const cv::Mat& image);
 private:
     caffe::Net<float> net;
     ConfigFile config_file;

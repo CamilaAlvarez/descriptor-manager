@@ -30,3 +30,6 @@ std::string ConfigFile::getValueForKey(const std::string &key) {
     return config_map[key];
 }
 
+bool ConfigFile::hasKey(const std::string &key) {
+    return config_map.find(key) != config_map.end();
+}
