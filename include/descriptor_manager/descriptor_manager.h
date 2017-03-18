@@ -16,6 +16,7 @@ public:
     explicit DescriptorManager(std::string network_config_file, std::string separator);
     explicit DescriptorManager(ConfigFile config_file);
     float * calculateDescriptorForImage(const cv::Mat& image);
+    float * calculateDescriptorForDatum(const caffe::Datum &datum);
 private:
     caffe::Net<float> net;
     ConfigFile config_file;

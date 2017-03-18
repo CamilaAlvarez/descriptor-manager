@@ -28,3 +28,5 @@ float * DescriptorManager::calculateDescriptorForImage(const cv::Mat& image) {
     return descriptor;
 
 }
+
+float * DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum) { }
