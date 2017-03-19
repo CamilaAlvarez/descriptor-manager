@@ -41,3 +41,10 @@ Descriptor DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &da
 
     return Descriptor(image_id, descriptor, dimension);
 }
+
+Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(const std::string &images_file,
+                                                                   const std::string &separator,
+                                                                   int number_images_per_line,
+                                                                   int total_number_channels) {
+
+}
