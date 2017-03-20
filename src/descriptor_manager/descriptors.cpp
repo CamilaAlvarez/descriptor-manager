@@ -4,7 +4,9 @@
 
 #include "descriptor_manager/descriptors.h"
 #include <fstream>
-
+#ifdef HAS_GLOG
+    #include "glog/logging.h"
+#endif
 typedef std::map<std::string, Descriptor>::iterator map_iter;
 
 Descriptors::Descriptors(int number_items):number_items(number_items) {}
@@ -14,7 +16,9 @@ void Descriptors::setDescriptorSize(int descriptor_size){
 }
 
 void Descriptors::addDescriptor(const std::string &image_id, const Descriptor& descriptor){
-    //warning si se repite image_id
+#if HAS_LOG
+    LOG_IF(WARNING, descriptors.find(image_id) != descriptors.end()) << "THERE IS A  SAVED DESCRIPTOR WITH THE SAME IMAGE ID";
+#endif
     descriptors[image_id] = descriptor;
 }
 
@@ -41,7 +45,9 @@ void Descriptors::writeDescriptorsToFile(const std::string &outfile) {
     std::ofstream output;
     output.open(outfile, std::ios::out | std::ios::binary);
 
-    //assert(output.is_open())
+#if HAS_LOG
+    CHECK(output.is_open()) << "COULD NOT OPEN OUTPUT FILE";
+#endif
     output.write(reinterpret_cast<char *>(&number_items), sizeof(int));
     output.write(reinterpret_cast<char *>(&descriptors_size), sizeof(int));
     for(map_iter it = descriptors.begin(); it != descriptors.end(); ++it ){
@@ -63,7 +69,13 @@ void Descriptors::writeDescriptorsToFile(const std::string &outfile) {
 void Descriptors::loadDescriptorsFromFile(const std::string &infile) {
     std::ifstream input_file;
     input_file.open(infile, std::ios::in | std::ios::binary);
-    //assert(input_file.is_open())
+#if HAS_LOG
+    LOG_IF(WARNING, descriptors.size() > 0) << "THIS WILL OVERWRITE CURRENT DESCRIPTORS";
+    CHECK(input_file.is_open()) << "COULD NOT OPEN OUTPUT FILE";
+#endif
+
+    if(descriptors.size() > 0)
+        destroyDescriptors();
 
     input_file.read(reinterpret_cast<char *>(&number_items), sizeof(number_items));
     input_file.read(reinterpret_cast<char *>(&descriptors_size), sizeof(descriptors_size));
