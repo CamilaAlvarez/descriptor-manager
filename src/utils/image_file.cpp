@@ -20,9 +20,15 @@ ImageFile::ImageFile(const std::string &images_file, const std::string &separato
             splitted_line.push_back(line_part);
             separator_position = line_rest.find(separator);
         }
-        //assert(number_images_per_line + 1 == splitted_line.size())
-        std::vector<std::string> images_list(splitted_line.begin()+ 1, splitted_line.end());
-        images.push_back(Image(splitted_line[0], total_number_channels, images_list));
+        //assert(number_images_per_line + 2 == splitted_line.size())
+        std::vector<std::string> images_list(splitted_line.begin()+ 1, splitted_line.begin()+number_images_per_line+1);
+        try {
+            int image_class = std::stoi(splitted_line.back());
+            images.push_back(Image(splitted_line[0], total_number_channels, images_list, image_class));
+        }
+        catch (const std::invalid_argument& e){
+            throw std::invalid_argument("Class must be an integer");
+        }
     }
 }
 
@@ -40,4 +46,8 @@ int ImageFile::getNumberOfImages() {
 
 std::string ImageFile::getImageId(int index) {
     return images[index].getImageId();
+}
+
+int ImageFile::getImageClass(int index) {
+    return images[index].getImageClass();
 }

@@ -7,8 +7,9 @@
 #include "caffe/util/io.hpp"
 #include <cmath>
 
-Image::Image(const std::string &image_id, int number_channels,const  std::vector<std::string> &image_parts):
-image_id(image_id), number_of_channels(number_channels), image_parts(image_parts){ }
+Image::Image(const std::string &image_id, int number_channels,const  std::vector<std::string> &image_parts,
+             int image_class):
+image_id(image_id), number_of_channels(number_channels), image_parts(image_parts), image_class(image_class){ }
 
 void Image::loadImages() {
     max_size = cv::Size(0,0);
@@ -50,4 +51,8 @@ cv::Mat Image::getImageCVMat(){
 
 std::string Image::getImageId() {
     return image_id;
+}
+
+int Image::getImageClass() {
+    return image_class;
 }

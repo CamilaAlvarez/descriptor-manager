@@ -16,13 +16,15 @@ float * DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum
     return  descriptor_object.getDescriptor();
 }
 
-Descriptor DescriptorManager::calculateDescriptorForImage(const cv::Mat &image, const std::string &image_id) {
+Descriptor DescriptorManager::calculateDescriptorForImage(const cv::Mat &image, const std::string &image_id,
+                                                          int image_class) {
     caffe::Datum datum;
     caffe::CVMatToDatum(image, &datum);
-    return calculateDescriptorForDatum(datum, image_id);
+    return calculateDescriptorForDatum(datum, image_id, image_class);
 }
 
-Descriptor DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id) {
+Descriptor DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id,
+                                                          int image_class) {
     std::vector<int> image_shape;
     image_shape.push_back(1);
     image_shape.push_back(datum.channels());
@@ -39,7 +41,7 @@ Descriptor DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &da
     float* descriptor = new float[dimension];
     std::copy(descriptor_data, descriptor_data+dimension, descriptor);
 
-    return Descriptor(image_id, descriptor, dimension);
+    return Descriptor(image_id, descriptor, dimension, image_class);
 }
 
 Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(const std::string &images_file,

@@ -20,8 +20,8 @@ public:
     explicit DescriptorManager(ConfigFile config_file);
     float * calculateDescriptorForImage(const cv::Mat& image);
     float * calculateDescriptorForDatum(const caffe::Datum &datum);
-    Descriptor calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id);
-    Descriptor calculateDescriptorForImage(const cv::Mat& image, const std::string &image_id);
+    Descriptor calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id, int image_class = 0);
+    Descriptor calculateDescriptorForImage(const cv::Mat& image, const std::string &image_id, int image_class = 0);
     Descriptors calculateDescriptorsForImagesInFile(const std::string &images_file, const std::string &separator,
                                                     int number_images_per_line = 1, int total_number_channels = 3);
     Descriptors calculateDescriptorsForImagesInFile(ImageFile image_file);

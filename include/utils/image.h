@@ -12,13 +12,15 @@
 
 class Image {
 public:
-    Image(const std::string &image_id,int number_channels, const std::vector<std::string>& image_parts);
+    Image(const std::string &image_id,int number_channels, const std::vector<std::string>& image_parts, int image_class);
     caffe::Datum getImageDatum();
     cv::Mat getImageCVMat();
     std::string getImageId();
+    int getImageClass();
 
 private:
     std::string image_id;
+    int image_class;
     int number_of_channels;
     std::vector<std::string> image_parts;
     std::vector<cv::Mat> cv_images;
