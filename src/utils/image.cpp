@@ -4,8 +4,9 @@
 
 #include "utils/image.h"
 #include "opencv2/highgui/highgui.hpp"
-#include "caffe/util/io.hpp"
-#include <cmath>
+#ifdef HAS_GLOG
+    #include "glog/logging.h"
+#endif
 
 Image::Image(const std::string &image_id, int number_channels,const  std::vector<std::string> &image_parts,
              const std::string& image_class):
@@ -21,7 +22,9 @@ void Image::loadImages() {
         current_number_channel += image.channels();
         cv_images.push_back(image);
     }
-    //assert(current_number_channel == number_channels)
+#if HAS_LOG
+    CHECK(current_number_channel == number_channels) << "REAL NUMBER OF CHANNELS DOESN'T MATCH EXPECTED NUMBER";
+#endif
 }
 
 caffe::Datum Image::getImageDatum() {
@@ -60,7 +63,9 @@ caffe::Datum Image::getImageDatum() {
 cv::Mat Image::getImageCVMat(){
     if (cv_images.size() == 0)
         loadImages();
-    //assert(number_of_channels <= 3)
+#if HAS_LOG
+    CHECK(number_of_channels <= 3) << "TO MANY CHANNELS FOR OPENCV MATRIX";
+#endif
     cv::Mat new_channels[number_of_channels];
     int new_channels_index = 0;
     for (std::vector<cv::Mat>::iterator it = cv_images.begin(); it != cv_images.end(); ++it) {

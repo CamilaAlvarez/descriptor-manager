@@ -3,7 +3,6 @@
 //
 
 #include "utils/image_file.h"
-#include <fstream>
 
 ImageFile::ImageFile(const std::string &images_file, const std::string &separator, int number_images_per_line,
                      int total_number_channels) {
@@ -20,7 +19,9 @@ ImageFile::ImageFile(const std::string &images_file, const std::string &separato
             splitted_line.push_back(line_part);
             separator_position = line_rest.find(separator);
         }
-        //assert(number_images_per_line + 2 == splitted_line.size())
+#if HAS_LOG
+        CHECK(number_images_per_line + 2 == splitted_line.size()) << "REAL NUMBER OF ARGUMENTS DOESN'T MATCH EXPECTED ONE";
+#endif
         std::vector<std::string> images_list(splitted_line.begin()+ 1, splitted_line.begin()+number_images_per_line+1);
         images.push_back(Image(splitted_line[0], total_number_channels, images_list, splitted_line.back()));
     }

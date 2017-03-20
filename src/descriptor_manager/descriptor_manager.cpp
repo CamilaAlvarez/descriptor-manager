@@ -3,6 +3,9 @@
 //
 
 #include "descriptor_manager/descriptor_manager.h"
+#ifdef HAS_GLOG
+    #include "glog/logging.h"
+#endif
 
 float * DescriptorManager::calculateDescriptorForImage(const cv::Mat& image) {
     caffe::Datum datum;
@@ -53,7 +56,9 @@ Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(const std::st
 
 Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(ImageFile image_file){
     int number_images = image_file.getNumberOfImages();
-    //assert(number_images > 0)
+#if HAS_LOG
+    CHECK(number_images > 0) << "THERE ARE NO IMAGES";
+#endif
     Descriptors descriptors(number_images);
     int descriptor_size = 0;
     for(int i = 0; i < number_images; i++){
