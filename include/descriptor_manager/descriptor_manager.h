@@ -25,6 +25,9 @@ public:
     Descriptors calculateDescriptorsForImagesInFile(const std::string &images_file, const std::string &separator,
                                                     int number_images_per_line = 1, int total_number_channels = 3);
     Descriptors calculateDescriptorsForImagesInFile(ImageFile image_file);
+    void calculateAndWriteDescriptorsForImagesInFile(const std::string &images_file,
+                                                                        const std::string &separator, int number_images_per_line,
+                                                                        int total_number_channels);
 private:
     caffe::Net<float> net;
     ConfigFile config_file;

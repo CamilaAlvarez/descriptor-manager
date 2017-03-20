@@ -65,3 +65,19 @@ Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(ImageFile ima
     descriptors.setDescriptorSize(descriptor_size);
     return descriptors;
 }
+
+void DescriptorManager::calculateAndWriteDescriptorsForImagesInFile(const std::string &images_file,
+                                                            const std::string &separator, int number_images_per_line,
+                                                            int total_number_channels) {
+    Descriptors descriptors = calculateDescriptorsForImagesInFile(images_file, separator, number_images_per_line,
+                                                                  total_number_channels);
+    /*
+     * <n_items:int>
+<dim:int>
+< <image_name_size:int>
+ <image_class:int>
+ <name:char[image_name_size]>
+ <class:char[image_class_size]>
+<desriptor:float[dim]>> [n_items]
+     */
+}
