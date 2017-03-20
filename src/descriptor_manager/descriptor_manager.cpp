@@ -84,6 +84,7 @@ void DescriptorManager::calculateAndWriteDescriptorsForImagesInFile(const std::s
                                                             int total_number_channels, const std::string &outfile) {
     Descriptors descriptors = calculateDescriptorsForImagesInFile(images_file, separator, number_images_per_line,
                                                                   total_number_channels);
+    descriptors.writeDescriptorsToFile(outfile);
 
 
 }

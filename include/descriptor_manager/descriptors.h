@@ -20,6 +20,7 @@ public:
     Descriptor getDescriptor(const std::string &image_id);
     void destroyDescriptors();
     void writeDescriptorsToFile(const std::string &outfile);
+    void loadDescriptorsFromFile(const std::string &infile);
 
 private:
     int descriptors_size;

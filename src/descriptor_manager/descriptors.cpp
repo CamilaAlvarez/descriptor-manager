@@ -59,3 +59,28 @@ void Descriptors::writeDescriptorsToFile(const std::string &outfile) {
         output.write(reinterpret_cast<char *>(descriptor_array), sizeof(descriptor_array[0])*descriptors_size);
     }
 }
+
+void Descriptors::loadDescriptorsFromFile(const std::string &infile) {
+    std::ifstream input_file;
+    input_file.open(infile, std::ios::in | std::ios::binary);
+    //assert(input_file.is_open())
+
+    input_file.read(reinterpret_cast<char *>(&number_items), sizeof(number_items));
+    input_file.read(reinterpret_cast<char *>(&descriptors_size), sizeof(descriptors_size));
+    for(int i = 0; i < number_items; i++){
+        int image_name_size;
+        input_file.read(reinterpret_cast<char *>(&image_name_size), sizeof(image_name_size));
+        int image_class_size;
+        input_file.read(reinterpret_cast<char *>(&image_class_size), sizeof(image_class_size));
+        char image_name_array[image_name_size];
+        input_file.read(image_name_array, image_name_size);
+        std::string image_id(image_name_array);
+        char image_class_array[image_class_size];
+        input_file.read(image_class_array, image_class_size);
+        std::string image_class(image_class_array);
+        float *descriptor = new float[descriptors_size];
+        input_file.read(reinterpret_cast<char *>(descriptor), sizeof(descriptor[0])*descriptors_size);
+        descriptors[image_id] = Descriptor(image_id, descriptor, descriptors_size, image_class);
+    }
+}
+
