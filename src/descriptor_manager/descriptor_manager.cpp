@@ -39,6 +39,9 @@ namespace descriptor {
         image_blob.push_back(blob);
         float loss;
         net.Forward(image_blob, &loss);
+#if HAS_LOG
+        CHECK(config_file.hasKey("LAYER")) << "MISSING LAYER PARAMETER";
+#endif
         const boost::shared_ptr<caffe::Blob<float>> &descriptor_blob = net.blob_by_name(
                 config_file.getValueForKey("LAYER"));
         const float *descriptor_data = descriptor_blob->cpu_data();

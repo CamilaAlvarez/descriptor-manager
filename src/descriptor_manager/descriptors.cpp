@@ -12,6 +12,7 @@ namespace descriptor {
 
     typedef std::map<std::string, Descriptor>::iterator map_iter;
 
+    Descriptors::Descriptors():number_items(0) {}
     Descriptors::Descriptors(int number_items) : number_items(number_items) {}
 
     void Descriptors::setDescriptorSize(int descriptor_size) {
@@ -34,6 +35,9 @@ namespace descriptor {
     }
 
     Descriptor Descriptors::getDescriptor(const std::string &image_id) {
+#if HAS_LOG
+        CHECK(descriptors.find(image_id) != descriptors.end()) << "THERE ARE NOT DESCRIPTORS FOR THAT IMAGE ID";
+#endif
         return descriptors[image_id];
     }
 
