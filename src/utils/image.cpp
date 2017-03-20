@@ -29,17 +29,31 @@ caffe::Datum Image::getImageDatum() {
         loadImages();
 
     caffe::Datum datum;
+    int height = max_size.height;
+    int width = max_size.width;
     datum.set_channels(number_of_channels);
-    datum.set_height(max_size.height);
-    datum.set_height(max_size.width);
-    //llenar datum
-    /*for(std::vector<cv::Mat>::iterator it = cv_images.begin(); it != cv_images.end(); ++it){
+    datum.set_height(height);
+    datum.set_height(width);
+    std::string buffer(static_cast<size_t>(number_of_channels*height*width), ' ');
+    int previous_number_channels = 0;
+    for(std::vector<cv::Mat>::iterator it = cv_images.begin(); it != cv_images.end(); ++it){
         caffe::Datum image_datum;
         cv::Mat image = *it;
+        int channel_number = it->channels();
         cv::resize(image, image, image.size(), 0, 0, cv::INTER_CUBIC);
-        caffe::CVMatToDatum(image, &image_datum);
-        image_datum.da
-    }*/
+        for (int h = 0; h < height; ++h) {
+            const uchar* ptr = image.ptr<uchar>(h);
+            int img_index = 0;
+            for (int w = 0; w < width; ++w) {
+                for (int c = 0; c < channel_number; ++c) {
+                    int datum_index = previous_number_channels*height*width + (c * height + h) * width + w;
+                    buffer[datum_index] = static_cast<char>(ptr[img_index++]);
+                }
+            }
+        }
+        previous_number_channels += channel_number;
+    }
+    datum.set_data(buffer);
     return datum;
 }
 
@@ -47,6 +61,20 @@ cv::Mat Image::getImageCVMat(){
     if (cv_images.size() == 0)
         loadImages();
     //assert(number_of_channels <= 3)
+    cv::Mat new_channels[number_of_channels];
+    int new_channels_index = 0;
+    for (std::vector<cv::Mat>::iterator it = cv_images.begin(); it != cv_images.end(); ++it) {
+        int number_channels = it->channels();
+        cv::Mat image_channels[number_channels];
+        cv::split(*it, image_channels);
+        for(int i = 0; i < number_channels; i++){
+            new_channels[new_channels_index] = image_channels[i];
+            new_channels_index++;
+        }
+    }
+    cv::Mat output;
+    cv::merge(new_channels, static_cast<size_t>(number_of_channels), output);
+    return output;
 }
 
 std::string Image::getImageId() {
