@@ -21,7 +21,7 @@ public:
     caffe::Datum getImageDatum(int index);
     cv::Mat getImageCVMat(int index);
     std::string getImageId(int index);
-    int getImageClass(int index);
+    std::string getImageClass(int index);
 
 private:
     int number_images;

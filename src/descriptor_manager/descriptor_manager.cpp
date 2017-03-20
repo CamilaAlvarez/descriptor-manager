@@ -4,7 +4,6 @@
 
 #include "descriptor_manager/descriptor_manager.h"
 
-
 float * DescriptorManager::calculateDescriptorForImage(const cv::Mat& image) {
     caffe::Datum datum;
     caffe::CVMatToDatum(image, &datum);
@@ -17,14 +16,14 @@ float * DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum
 }
 
 Descriptor DescriptorManager::calculateDescriptorForImage(const cv::Mat &image, const std::string &image_id,
-                                                          int image_class) {
+                                                          const std::string& image_class) {
     caffe::Datum datum;
     caffe::CVMatToDatum(image, &datum);
     return calculateDescriptorForDatum(datum, image_id, image_class);
 }
 
 Descriptor DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id,
-                                                          int image_class) {
+                                                          const std::string& image_class) {
     std::vector<int> image_shape;
     image_shape.push_back(1);
     image_shape.push_back(datum.channels());
@@ -55,31 +54,36 @@ Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(const std::st
 Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(ImageFile image_file){
     int number_images = image_file.getNumberOfImages();
     //assert(number_images > 0)
-    Descriptors descriptors;
+    Descriptors descriptors(number_images);
     int descriptor_size = 0;
     for(int i = 0; i < number_images; i++){
         caffe::Datum image = image_file.getImageDatum(i);
         std::string image_id = image_file.getImageId(i);
         Descriptor d = calculateDescriptorForDatum(image, image_id);
         descriptor_size = d.getDescriptorSize();
-        descriptors.addDescriptor(image_id, d.getDescriptor());
+        descriptors.addDescriptor(image_id, d);
     }
     descriptors.setDescriptorSize(descriptor_size);
     return descriptors;
 }
 
+
+/*
+ * <n_items:int>
+ * <dim:int>
+ * <
+ *      <image_name_size:int>
+ *      <image_class_size:int>
+ *      <name:char[image_name_size]>
+ *      <class:char[image_class_size]>
+ *      <desriptor:float[dim]>
+ * > [n_items]
+ */
 void DescriptorManager::calculateAndWriteDescriptorsForImagesInFile(const std::string &images_file,
                                                             const std::string &separator, int number_images_per_line,
-                                                            int total_number_channels) {
+                                                            int total_number_channels, const std::string &outfile) {
     Descriptors descriptors = calculateDescriptorsForImagesInFile(images_file, separator, number_images_per_line,
                                                                   total_number_channels);
-    /*
-     * <n_items:int>
-<dim:int>
-< <image_name_size:int>
- <image_class:int>
- <name:char[image_name_size]>
- <class:char[image_class_size]>
-<desriptor:float[dim]>> [n_items]
-     */
+
+
 }

@@ -8,7 +8,7 @@
 #include <cmath>
 
 Image::Image(const std::string &image_id, int number_channels,const  std::vector<std::string> &image_parts,
-             int image_class):
+             const std::string& image_class):
 image_id(image_id), number_of_channels(number_channels), image_parts(image_parts), image_class(image_class){ }
 
 void Image::loadImages() {
@@ -53,6 +53,6 @@ std::string Image::getImageId() {
     return image_id;
 }
 
-int Image::getImageClass() {
+std::string Image::getImageClass() {
     return image_class;
 }

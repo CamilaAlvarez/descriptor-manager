@@ -7,16 +7,24 @@
 
 #include <iostream>
 #include <map>
+#include "descriptor.h"
 
 class Descriptors {
 
 public:
+    Descriptors(int number_items);
     void setDescriptorSize(int descriptor_size);
-    void addDescriptor(const std::string &image_id, float *descriptor);
+    void addDescriptor(const std::string &image_id, const Descriptor& descriptor);
+    int getNumberOfItems();
+    int getDescriptorSize();
+    Descriptor getDescriptor(const std::string &image_id);
+    void destroyDescriptors();
+    void writeDescriptorsToFile(const std::string &outfile);
 
 private:
     int descriptors_size;
-    std::map<std::string, float*> descriptors;
+    std::map<std::string, Descriptor> descriptors;
+    int number_items;
 };
 
 

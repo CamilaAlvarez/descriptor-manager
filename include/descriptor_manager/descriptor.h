@@ -9,19 +9,22 @@
 
 class Descriptor {
 public:
-    explicit Descriptor(const std::string& image_id, float* descriptor, int descriptor_size, int image_class);
+    Descriptor();
+    explicit Descriptor(const std::string& image_id, float* descriptor, int descriptor_size,
+                        const std::string& image_class);
     Descriptor(const Descriptor &descriptor_to_copy);
 
     std::string getImageId();
     float* getDescriptor();
     int getDescriptorSize();
-    int getImageClass();
+    std::string getImageClass();
+    void destroyDescriptor();
 
 private:
     std::string image_id;
     float * descriptor;
     int descriptor_size;
-    int image_class;
+    std::string image_class;
 
 };
 
