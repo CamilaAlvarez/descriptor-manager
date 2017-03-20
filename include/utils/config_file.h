@@ -12,6 +12,8 @@ namespace descriptor {
 
     class ConfigFile {
     public:
+        ConfigFile();
+
         ConfigFile(const std::string &file, const std::string &separator = "\t");
 
         std::string getValueForKey(const std::string &key);

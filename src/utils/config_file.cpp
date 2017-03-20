@@ -10,6 +10,8 @@
 
 namespace descriptor {
 
+    ConfigFile::ConfigFile() {}
+
     ConfigFile::ConfigFile(const std::string &file, const std::string &separator) {
         loadConfigFileToMap(file, separator);
     }

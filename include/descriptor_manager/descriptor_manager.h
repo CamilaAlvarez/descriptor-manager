@@ -41,7 +41,7 @@ namespace descriptor {
                                                          int total_number_channels, const std::string &outfile);
 
     private:
-        caffe::Net<float> net;
+        caffe::Net<float> *net;
         ConfigFile config_file;
 
 

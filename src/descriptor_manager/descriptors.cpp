@@ -50,6 +50,7 @@ namespace descriptor {
 
 #if HAS_LOG
         CHECK(output.is_open()) << "COULD NOT OPEN OUTPUT FILE";
+        LOG(INFO) << "WRITING DESCRIPTORS IN FILE";
 #endif
         output.write(reinterpret_cast<char *>(&number_items), sizeof(int));
         output.write(reinterpret_cast<char *>(&descriptors_size), sizeof(int));
@@ -69,12 +70,17 @@ namespace descriptor {
         }
     }
 
+#if HAS_LOG
+        LOG(INFO) << "FINISHED WRITING DESCRIPTORS IN FILE";
+#endif
+
     void Descriptors::loadDescriptorsFromFile(const std::string &infile) {
         std::ifstream input_file;
         input_file.open(infile, std::ios::in | std::ios::binary);
 #if HAS_LOG
         LOG_IF(WARNING, descriptors.size() > 0) << "THIS WILL OVERWRITE CURRENT DESCRIPTORS";
         CHECK(input_file.is_open()) << "COULD NOT OPEN OUTPUT FILE";
+        LOG(INFO) << "LOADING DESCRIPTORS";
 #endif
 
         if (descriptors.size() > 0)
@@ -98,5 +104,8 @@ namespace descriptor {
             descriptors[image_id] = Descriptor(image_id, descriptor, descriptors_size, image_class);
         }
     }
+#if HAS_LOG
+        LOG(INFO) << "FINISHED LOADING DESCRIPTORS";
+#endif
 }
 

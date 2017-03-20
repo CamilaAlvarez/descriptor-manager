@@ -9,6 +9,37 @@
 
 namespace descriptor {
 
+    DescriptorManager::DescriptorManager(std::string network_config_file, std::string separator) {
+        config_file = ConfigFile(network_config_file, separator);
+#if HAS_LOG
+        CHECK(config_file.hasKey("ARCHITECTURE")) << "MISSING NETWORK ARCHITECTURE FILE. PARAMETER: ARCHITECTURE";
+#endif
+        std::string architecture = config_file.getValueForKey("ARCHITECTURE");
+#if HAS_LOG
+        CHECK(config_file.hasKey("MODEL")) << "MISSING NETWORK MODEL FILE. PARAMETER: MODEL";
+#endif
+        std::string model = config_file.getValueForKey("MODEL");
+        if(config_file.hasKey("BASE_DIR")){
+            std::string base_dir = config_file.getValueForKey("BASE_DIR");
+            model = base_dir+"/"+model;
+            architecture = base_dir+"/"+architecture;
+        }
+
+#if CPU_ONLY
+        caffe::Caffe::set_mode(caffe::Caffe::CPU);
+#else
+        caffe::Caffe::set_mode(caffe::Caffe::GPU);
+#endif
+#if HAS_LOG
+        LOG(INFO) << "STARTING NETWORK LOADING";
+#endif
+        net = new caffe::Net<float>(architecture, caffe::TEST);
+        net->CopyTrainedLayersFrom(model);
+#if HAS_LOG
+        LOG(INFO) << "NETWORK FINISHED LOADING";
+#endif
+    }
+
     float *DescriptorManager::calculateDescriptorForImage(const cv::Mat &image) {
         caffe::Datum datum;
         caffe::CVMatToDatum(image, &datum);
@@ -29,6 +60,9 @@ namespace descriptor {
 
     Descriptor DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id,
                                                               const std::string &image_class) {
+#if HAS_LOG
+        LOG(INFO) << "CALCULATING DESCRIPTOR";
+#endif
         std::vector<int> image_shape;
         image_shape.push_back(1);
         image_shape.push_back(datum.channels());
@@ -38,14 +72,16 @@ namespace descriptor {
         std::vector<caffe::Blob<float> *> image_blob;
         image_blob.push_back(blob);
         float loss;
-        net.Forward(image_blob, &loss);
-        const boost::shared_ptr<caffe::Blob<float>> &descriptor_blob = net.blob_by_name(
+        net->Forward(image_blob, &loss);
+        const boost::shared_ptr<caffe::Blob<float>> &descriptor_blob = net->blob_by_name(
                 config_file.getValueForKey("LAYER"));
         const float *descriptor_data = descriptor_blob->cpu_data();
         int dimension = descriptor_blob->count();
         float *descriptor = new float[dimension];
         std::copy(descriptor_data, descriptor_data + dimension, descriptor);
-
+#if HAS_LOG
+        LOG(INFO) << "FINISHED CALCULATING DESCRIPTOR";
+#endif
         return Descriptor(image_id, descriptor, dimension, image_class);
     }
 
@@ -61,6 +97,7 @@ namespace descriptor {
         int number_images = image_file.getNumberOfImages();
 #if HAS_LOG
         CHECK(number_images > 0) << "THERE ARE NO IMAGES";
+        LOG(INFO) << "CALCULATING DESCRIPTORS FOR IMAGES IN FILE";
 #endif
         Descriptors descriptors(number_images);
         int descriptor_size = 0;
@@ -72,6 +109,9 @@ namespace descriptor {
             descriptors.addDescriptor(image_id, d);
         }
         descriptors.setDescriptorSize(descriptor_size);
+#if HAS_LOG
+        LOG(INFO) << "FINISHED CALCULATING DESCRIPTORS FOR IMAGES IN FILE";
+#endif
         return descriptors;
     }
 
