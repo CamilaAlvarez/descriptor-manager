@@ -20,6 +20,7 @@ public:
     int getNumberOfImages();
     caffe::Datum getImageDatum(int index);
     cv::Mat getImageCVMat(int index);
+    std::string getImageId(int index);
 
 private:
     int number_images;

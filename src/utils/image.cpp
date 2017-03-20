@@ -2,7 +2,7 @@
 // Created by Camila Alvarez on 19-03-17.
 //
 
-#include "descriptor_manager/image.h"
+#include "utils/image.h"
 #include "opencv2/highgui/highgui.hpp"
 #include "caffe/util/io.hpp"
 #include <cmath>
@@ -46,4 +46,8 @@ cv::Mat Image::getImageCVMat(){
     if (cv_images.size() == 0)
         loadImages();
     //assert(number_of_channels <= 3)
+}
+
+std::string Image::getImageId() {
+    return image_id;
 }

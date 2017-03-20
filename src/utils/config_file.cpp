@@ -2,7 +2,7 @@
 // Created by Camila Alvarez on 13-03-17.
 //
 
-#include "descriptor_manager/config_file.h"
+#include "utils/config_file.h"
 #include <fstream>
 #include <assert.h>
 

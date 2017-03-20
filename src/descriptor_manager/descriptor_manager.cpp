@@ -46,5 +46,22 @@ Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(const std::st
                                                                    const std::string &separator,
                                                                    int number_images_per_line,
                                                                    int total_number_channels) {
+    ImageFile image_file(images_file, separator, number_images_per_line, total_number_channels);
+    return calculateDescriptorsForImagesInFile(image_file);
+}
 
+Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(ImageFile image_file){
+    int number_images = image_file.getNumberOfImages();
+    //assert(number_images > 0)
+    Descriptors descriptors;
+    int descriptor_size = 0;
+    for(int i = 0; i < number_images; i++){
+        caffe::Datum image = image_file.getImageDatum(i);
+        std::string image_id = image_file.getImageId(i);
+        Descriptor d = calculateDescriptorForDatum(image, image_id);
+        descriptor_size = d.getDescriptorSize();
+        descriptors.addDescriptor(image_id, d.getDescriptor());
+    }
+    descriptors.setDescriptorSize(descriptor_size);
+    return descriptors;
 }

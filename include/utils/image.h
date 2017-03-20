@@ -15,6 +15,7 @@ public:
     Image(const std::string &image_id,int number_channels, const std::vector<std::string>& image_parts);
     caffe::Datum getImageDatum();
     cv::Mat getImageCVMat();
+    std::string getImageId();
 
 private:
     std::string image_id;

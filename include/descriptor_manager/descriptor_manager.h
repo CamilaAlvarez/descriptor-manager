@@ -7,10 +7,11 @@
 
 #include <iostream>
 #include "caffe/caffe.hpp"
-#include "descriptor_manager/config_file.h"
+#include "utils/config_file.h"
 #include "descriptor_manager/descriptor.h"
 #include "descriptor_manager/descriptors.h"
 #include "opencv2/imgproc/imgproc.hpp"
+#include "utils/image_file.h"
 
 class DescriptorManager {
 
@@ -22,7 +23,8 @@ public:
     Descriptor calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id);
     Descriptor calculateDescriptorForImage(const cv::Mat& image, const std::string &image_id);
     Descriptors calculateDescriptorsForImagesInFile(const std::string &images_file, const std::string &separator,
-                                                    int number_images_per_line, int total_number_channels);
+                                                    int number_images_per_line = 1, int total_number_channels = 3);
+    Descriptors calculateDescriptorsForImagesInFile(ImageFile image_file);
 private:
     caffe::Net<float> net;
     ConfigFile config_file;

@@ -2,7 +2,7 @@
 // Created by Camila Alvarez on 19-03-17.
 //
 
-#include "descriptor_manager/image_file.h"
+#include "utils/image_file.h"
 #include <fstream>
 
 ImageFile::ImageFile(const std::string &images_file, const std::string &separator, int number_images_per_line,
@@ -32,4 +32,12 @@ caffe::Datum ImageFile::getImageDatum(int index) {
 
 cv::Mat ImageFile::getImageCVMat(int index) {
     return images[index].getImageCVMat();
+}
+
+int ImageFile::getNumberOfImages() {
+    return number_images;
+}
+
+std::string ImageFile::getImageId(int index) {
+    return images[index].getImageId();
 }
