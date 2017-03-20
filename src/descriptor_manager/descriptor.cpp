@@ -4,35 +4,38 @@
 
 #include "descriptor_manager/descriptor.h"
 
-Descriptor::Descriptor() {}
+namespace descriptor {
 
-Descriptor::Descriptor(const std::string& image_id, float* descriptor, int descriptor_size,
-                       const std::string& image_class):
-        image_id(image_id), descriptor(descriptor), descriptor_size(descriptor_size), image_class(image_class){}
+    Descriptor::Descriptor() {}
 
-Descriptor::Descriptor(const Descriptor &descriptor_to_copy) {
-    image_id = descriptor_to_copy.image_id;
-    descriptor = descriptor_to_copy.descriptor;
-    descriptor_size = descriptor_to_copy.descriptor_size;
-    image_class = descriptor_to_copy.image_class;
-}
+    Descriptor::Descriptor(const std::string &image_id, float *descriptor, int descriptor_size,
+                           const std::string &image_class) :
+            image_id(image_id), descriptor(descriptor), descriptor_size(descriptor_size), image_class(image_class) {}
 
-std::string Descriptor::getImageId(){
-    return image_id;
-}
+    Descriptor::Descriptor(const Descriptor &descriptor_to_copy) {
+        image_id = descriptor_to_copy.image_id;
+        descriptor = descriptor_to_copy.descriptor;
+        descriptor_size = descriptor_to_copy.descriptor_size;
+        image_class = descriptor_to_copy.image_class;
+    }
 
-float* Descriptor::getDescriptor(){
-    return descriptor;
-}
+    std::string Descriptor::getImageId() {
+        return image_id;
+    }
 
-int Descriptor::getDescriptorSize(){
-    return descriptor_size;
-}
+    float *Descriptor::getDescriptor() {
+        return descriptor;
+    }
 
-std::string Descriptor::getImageClass() {
-    return image_class;
-}
+    int Descriptor::getDescriptorSize() {
+        return descriptor_size;
+    }
 
-void Descriptor::destroyDescriptor(){
-    delete descriptor;
+    std::string Descriptor::getImageClass() {
+        return image_class;
+    }
+
+    void Descriptor::destroyDescriptor() {
+        delete descriptor;
+    }
 }

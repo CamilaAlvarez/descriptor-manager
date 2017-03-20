@@ -10,24 +10,31 @@
 #include "caffe/caffe.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
-class Image {
-public:
-    Image(const std::string &image_id,int number_channels, const std::vector<std::string>& image_parts,
-          const std::string& image_class);
-    caffe::Datum getImageDatum();
-    cv::Mat getImageCVMat();
-    std::string getImageId();
-    std::string getImageClass();
+namespace descriptor {
 
-private:
-    std::string image_id;
-    std::string image_class;
-    int number_of_channels;
-    std::vector<std::string> image_parts;
-    std::vector<cv::Mat> cv_images;
-    cv::Size max_size;
-    void loadImages();
-};
+    class Image {
+    public:
+        Image(const std::string &image_id, int number_channels, const std::vector<std::string> &image_parts,
+              const std::string &image_class);
 
+        caffe::Datum getImageDatum();
+
+        cv::Mat getImageCVMat();
+
+        std::string getImageId();
+
+        std::string getImageClass();
+
+    private:
+        std::string image_id;
+        std::string image_class;
+        int number_of_channels;
+        std::vector<std::string> image_parts;
+        std::vector<cv::Mat> cv_images;
+        cv::Size max_size;
+
+        void loadImages();
+    };
+}
 
 #endif //DESCRIPTOR_MANAGER_IMAGE_HPP
