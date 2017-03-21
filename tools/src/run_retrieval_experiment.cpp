@@ -96,7 +96,8 @@ int main(int argc, char *argv[]){
 
     descriptor::ConfigFile config_file(FLAGS_network_config);
     descriptor::DescriptorManager manager(config_file);
-    descriptor::ImageFile image_file(FLAGS_images_file, FLAGS_images_per_line, FLAGS_channels_per_input);
+    descriptor::ImageFile image_file(FLAGS_images_file, manager.getExpectedImageSize(),
+                                     FLAGS_images_per_line, FLAGS_channels_per_input);
     descriptor::Descriptors descriptors = manager.calculateDescriptorsForImagesInFile(image_file);
 
     boost::filesystem::path output_dir(FLAGS_output_dir);

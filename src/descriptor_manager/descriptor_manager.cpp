@@ -27,6 +27,7 @@ namespace descriptor {
     }
 
     float *DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum, bool normalized) {
+
         Descriptor descriptor_object = calculateDescriptorForDatum(datum, "", normalized);
         return descriptor_object.getDescriptor();
     }
@@ -44,6 +45,7 @@ namespace descriptor {
                                                               bool normalized,
                                                               const std::string &image_class) {
 #if HAS_LOG
+        CHECK(datum.height() == expected_image_size.height && datum.width() == expected_image_size.width) << "INVALID IMAGE DIMENSIONS";
         LOG(INFO) << "CALCULATING DESCRIPTOR";
 #endif
         std::vector<int> image_shape;
