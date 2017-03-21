@@ -10,18 +10,19 @@
 namespace descriptor {
 
     DescriptorManager::DescriptorManager(const ConfigFile &config_file){
-        this->config_file = config_file;
         init(config_file);
     }
 
     DescriptorManager::DescriptorManager(const std::string &network_config_file, const std::string &separator) {
-        config_file = ConfigFile(network_config_file, separator);
+        ConfigFile config_file = ConfigFile(network_config_file, separator);
         init(config_file);
     }
 
     float *DescriptorManager::calculateDescriptorForImage(const cv::Mat &image, bool normalized) {
         caffe::Datum datum;
-        caffe::CVMatToDatum(image, &datum);
+        cv::Mat output_image;
+        cv::resize(image, output_image, expected_image_size, 0, 0, cv::INTER_CUBIC);
+        caffe::CVMatToDatum(output_image, &datum);
         return calculateDescriptorForDatum(datum, normalized);
     }
 
@@ -33,7 +34,9 @@ namespace descriptor {
     Descriptor DescriptorManager::calculateDescriptorForImage(const cv::Mat &image, const std::string &image_id,
                                                               bool normalized, const std::string &image_class) {
         caffe::Datum datum;
-        caffe::CVMatToDatum(image, &datum);
+        cv::Mat output_image;
+        cv::resize(image, output_image, expected_image_size, 0, 0, cv::INTER_CUBIC);
+        caffe::CVMatToDatum(output_image, &datum);
         return calculateDescriptorForDatum(datum, image_id, normalized, image_class);
     }
 
@@ -54,7 +57,7 @@ namespace descriptor {
         float loss;
         net->Forward(image_blob, &loss);
         const boost::shared_ptr<caffe::Blob<float>> &descriptor_blob = net->blob_by_name(
-                config_file.getValueForKey("LAYER"));
+                extractor_layer);
         const float *descriptor_data = descriptor_blob->cpu_data();
         int dimension = descriptor_blob->count();
         float *descriptor = new float[dimension];
@@ -84,7 +87,8 @@ namespace descriptor {
                                                                        const std::string &separator,
                                                                        int number_images_per_line,
                                                                        int total_number_channels) {
-        ImageFile image_file(images_file, total_number_channels, number_images_per_line, separator);
+        ImageFile image_file(images_file, expected_image_size, total_number_channels,
+                             number_images_per_line, separator);
         return calculateDescriptorsForImagesInFile(image_file, normalized);
     }
 
@@ -138,7 +142,14 @@ namespace descriptor {
     }
 
     void DescriptorManager::init(ConfigFile config_file) {
-
+#if HAS_LOG
+        CHECK(config_file.hasKey("LAYER")) << "MISSING NETWORK EXTRACTOR LAYER. PARAMETER: LAYER";
+#endif
+        extractor_layer = config_file.getValueForKey("LAYER");
+#if HAS_LOG
+        CHECK(config_file.hasKey("IMAGE_HEIGHT")) << "MISSING IMAGE HEIGHT. PARAMETER: IMAGE_HEIGHT";
+        CHECK(config_file.hasKey("IMAGE_WIDTH")) << "MISSING IMAGE WIDTH. PARAMETER: IMAGE_WIDTH";
+#endif
 #if HAS_LOG
         CHECK(config_file.hasKey("ARCHITECTURE")) << "MISSING NETWORK ARCHITECTURE FILE. PARAMETER: ARCHITECTURE";
 #endif
@@ -146,6 +157,15 @@ namespace descriptor {
 #if HAS_LOG
         CHECK(config_file.hasKey("MODEL")) << "MISSING NETWORK MODEL FILE. PARAMETER: MODEL";
 #endif
+        try {
+            int image_height = std::stoi(config_file.getValueForKey("IMAGE_HEIGHT"));
+            int image_width = std::stoi(config_file.getValueForKey("IMAGE_WIDTH"));
+            expected_image_size = cv::Size(image_width, image_height);
+        }
+        catch (const std::invalid_argument& e){
+            throw  std::runtime_error("INVALID HEIGHT OR WIDTH");
+        }
+
         std::string model = config_file.getValueForKey("MODEL");
         if(config_file.hasKey("BASE_DIR")){
             std::string base_dir = config_file.getValueForKey("BASE_DIR");
@@ -166,5 +186,9 @@ namespace descriptor {
 #if HAS_LOG
         LOG(INFO) << "NETWORK FINISHED LOADING";
 #endif
+    }
+
+    cv::Size DescriptorManager::getExpectedImageSize() {
+        return expected_image_size;
     }
 }

@@ -6,8 +6,9 @@
 
 namespace descriptor {
 
-    ImageFile::ImageFile(const std::string &images_file, int number_images_per_line,
-                         int total_number_channels, const std::string &separator) {
+    ImageFile::ImageFile(const std::string &images_file, const cv::Size &expected_size, int number_images_per_line,
+                         int total_number_channels, const std::string &separator):
+            expected_image_size(expected_size){
         std::ifstream image_file(images_file);
         std::string line;
         number_images = 0;
@@ -26,7 +27,8 @@ namespace descriptor {
 #endif
             std::vector<std::string> images_list(splitted_line.begin() + 1,
                                                  splitted_line.begin() + number_images_per_line + 1);
-            images.push_back(Image(splitted_line[0], total_number_channels, images_list, splitted_line.back()));
+            images.push_back(Image(splitted_line[0], total_number_channels, images_list, splitted_line.back(),
+                                   expected_size));
         }
     }
 

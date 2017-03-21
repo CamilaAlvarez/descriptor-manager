@@ -44,9 +44,12 @@ namespace descriptor {
                                                          const std::string &separator="\t", int number_images_per_line=1,
                                                          int total_number_channels=3);
 
+        cv::Size getExpectedImageSize();
+
     private:
         caffe::Net<float> *net;
-        ConfigFile config_file;
+        std::string extractor_layer;
+        cv::Size expected_image_size;
 
         void init(ConfigFile config_file);
     };
