@@ -17,34 +17,38 @@ namespace descriptor {
     class DescriptorManager {
 
     public:
-        explicit DescriptorManager(std::string network_config_file, std::string separator);
+        explicit DescriptorManager(const std::string &network_config_file, const std::string& separator);
 
-        explicit DescriptorManager(ConfigFile config_file);
+        explicit DescriptorManager(const ConfigFile& config_file);
 
-        float *calculateDescriptorForImage(const cv::Mat &image);
+        float *calculateDescriptorForImage(const cv::Mat &image, bool normalized=true);
 
-        float *calculateDescriptorForDatum(const caffe::Datum &datum);
+        float *calculateDescriptorForDatum(const caffe::Datum &datum, bool normalized=true);
 
         Descriptor calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id,
+                                               bool normalized=true,
                                                const std::string &image_class = "0");
 
         Descriptor calculateDescriptorForImage(const cv::Mat &image, const std::string &image_id,
+                                               bool normalized=true,
                                                const std::string &image_class = "0");
 
-        Descriptors calculateDescriptorsForImagesInFile(const std::string &images_file, const std::string &separator,
+        Descriptors calculateDescriptorsForImagesInFile(const std::string &images_file, bool normalized=true,
+                                                        const std::string &separator = "\t",
                                                         int number_images_per_line = 1, int total_number_channels = 3);
 
-        Descriptors calculateDescriptorsForImagesInFile(ImageFile image_file);
+        Descriptors calculateDescriptorsForImagesInFile(ImageFile image_file, bool normalized=true);
 
-        void calculateAndWriteDescriptorsForImagesInFile(const std::string &images_file,
-                                                         const std::string &separator, int number_images_per_line,
-                                                         int total_number_channels, const std::string &outfile);
+        void calculateAndWriteDescriptorsForImagesInFile(const std::string &images_file, const std::string &outfile,
+                                                         bool normalized=true,
+                                                         const std::string &separator="\t", int number_images_per_line=1,
+                                                         int total_number_channels=3);
 
     private:
         caffe::Net<float> *net;
         ConfigFile config_file;
 
-
+        void init(ConfigFile config_file);
     };
 }
 

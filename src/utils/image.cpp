@@ -66,6 +66,12 @@ namespace descriptor {
     cv::Mat Image::getImageCVMat() {
         if (cv_images.size() == 0)
             loadImages();
+        if(cv_images.size() == 1){
+#if HAS_LOG
+            CHECK(number_of_channels != cv_images[0].channels()) << "NUMBER OF CHANNELS DIFFERENT THAN EXPECTED";
+#endif
+            return cv_images[0];
+        }
 #if HAS_LOG
         CHECK(number_of_channels <= 3) << "TO MANY CHANNELS FOR OPENCV MATRIX";
 #endif

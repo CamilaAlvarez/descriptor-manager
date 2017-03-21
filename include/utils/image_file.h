@@ -15,9 +15,9 @@ namespace descriptor {
     class ImageFile {
     public:
         ImageFile(const std::string &images_file,
-                  const std::string &separator,
                   int number_images_per_line = 1,
-                  int total_number_channels = 3);
+                  int total_number_channels = 3,
+                  const std::string &separator = "\t");
 
         int getNumberOfImages();
 

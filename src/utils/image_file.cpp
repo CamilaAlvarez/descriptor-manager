@@ -6,8 +6,8 @@
 
 namespace descriptor {
 
-    ImageFile::ImageFile(const std::string &images_file, const std::string &separator, int number_images_per_line,
-                         int total_number_channels) {
+    ImageFile::ImageFile(const std::string &images_file, int number_images_per_line,
+                         int total_number_channels, const std::string &separator) {
         std::ifstream image_file(images_file);
         std::string line;
         number_images = 0;
