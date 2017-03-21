@@ -42,7 +42,7 @@ static void fillVectorWithFile(const std::string &file, std::vector<std::string>
 
 static void writeResult(const std::string &output_file, const std::string &image_name, const std::string &image_class,
                         std::priority_queue<std::pair<std::string, float>, std::vector<std::pair<std::string, float>>,
-                                min_heap_comparator> results_heap){
+                                min_heap_comparator> results_heap, descriptor::Descriptors& descriptors){
     std::ofstream output(output_file);
     CHECK(output.is_open()) << "COULDN'T OPEN OUTPUT FILE: "+output_file;
     output << image_name << "\t" << image_class << std::endl;
@@ -51,7 +51,10 @@ static void writeResult(const std::string &output_file, const std::string &image
     while(!results_heap.empty()){
         std::pair<std::string, float> retrieved_item = results_heap.top();
         results_heap.pop();
-        output << rank << "\t" << retrieved_item.first << "\t" << retrieved_item.second << std::endl;
+        std::string retrieved_item_id = retrieved_item.first;
+        output << rank << "\t" << retrieved_item_id << "\t" <<
+               descriptors.getDescriptor(retrieved_item_id).getImageClass()
+               << "\t" << retrieved_item.second << std::endl;
         rank++;
     }
 }
@@ -121,13 +124,14 @@ int main(int argc, char *argv[]){
         for(std::vector<std::string>::iterator retrieved_it =  retrieved_items.begin();
             retrieved_it != retrieved_items.end(); ++retrieved_it){
             std::string retrieved_item = *retrieved_it;
-            float * retrieved_item_descriptor = descriptors.getDescriptor(retrieved_item).getDescriptor();
+            descriptor::Descriptor retrieved_item_descriptor_object = descriptors.getDescriptor(retrieved_item);
+            float * retrieved_item_descriptor = retrieved_item_descriptor_object.getDescriptor();
             //Calculate distance
             float distance = calculateDistance(query_descriptor, retrieved_item_descriptor, descriptor_size);
             min_heap.push(std::make_pair(retrieved_item, distance));
         }
         std::string output_file_name = FLAGS_output_dir+"/"+query_name;
-        writeResult(output_file_name, query_name, query_descriptor_object.getImageClass(), min_heap);
+        writeResult(output_file_name, query_name, query_descriptor_object.getImageClass(), min_heap, descriptors);
     }
 
     return 0;
