@@ -23,8 +23,8 @@ namespace descriptor {
             cv::resize(image, image, expected_size, 0, 0, cv::INTER_CUBIC);
             cv_images.push_back(image);
         }
-#if HAS_LOG
-        CHECK(current_number_channel == number_channels) << "REAL NUMBER OF CHANNELS DOESN'T MATCH EXPECTED NUMBER";
+#ifdef HAS_LOG
+        CHECK(current_number_channel == number_of_channels) << "REAL NUMBER OF CHANNELS DOESN'T MATCH EXPECTED NUMBER";
 #endif
     }
 
@@ -64,12 +64,12 @@ namespace descriptor {
         if (cv_images.size() == 0)
             loadImages();
         if(cv_images.size() == 1){
-#if HAS_LOG
+#ifdef HAS_LOG
             CHECK(number_of_channels != cv_images[0].channels()) << "NUMBER OF CHANNELS DIFFERENT THAN EXPECTED";
 #endif
             return cv_images[0];
         }
-#if HAS_LOG
+#ifdef HAS_LOG
         CHECK(number_of_channels <= 3) << "TO MANY CHANNELS FOR OPENCV MATRIX";
 #endif
         cv::Mat new_channels[number_of_channels];

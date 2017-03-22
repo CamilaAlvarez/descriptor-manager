@@ -44,7 +44,7 @@ namespace descriptor {
     Descriptor DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id,
                                                               bool normalized,
                                                               const std::string &image_class) {
-#if HAS_LOG
+#ifdef HAS_LOG
         CHECK(datum.height() == expected_image_size.height && datum.width() == expected_image_size.width) << "INVALID IMAGE DIMENSIONS";
         LOG(INFO) << "CALCULATING DESCRIPTOR";
 #endif
@@ -64,7 +64,7 @@ namespace descriptor {
         int dimension = descriptor_blob->count();
         float *descriptor = new float[dimension];
         std::copy(descriptor_data, descriptor_data + dimension, descriptor);
-#if HAS_LOG
+#ifdef HAS_LOG
         LOG(INFO) << "FINISHED CALCULATING DESCRIPTOR";
 #endif
         if(normalized){
@@ -97,7 +97,7 @@ namespace descriptor {
     Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(ImageFile image_file,
                                                                        bool normalized) {
         int number_images = image_file.getNumberOfImages();
-#if HAS_LOG
+#ifdef HAS_LOG
         CHECK(number_images > 0) << "THERE ARE NO IMAGES";
         LOG(INFO) << "CALCULATING DESCRIPTORS FOR IMAGES IN FILE";
 #endif
@@ -112,7 +112,7 @@ namespace descriptor {
             descriptors.addDescriptor(image_id, d);
         }
         descriptors.setDescriptorSize(descriptor_size);
-#if HAS_LOG
+#ifdef HAS_LOG
         LOG(INFO) << "FINISHED CALCULATING DESCRIPTORS FOR IMAGES IN FILE";
 #endif
         return descriptors;
@@ -144,19 +144,19 @@ namespace descriptor {
     }
 
     void DescriptorManager::init(ConfigFile config_file) {
-#if HAS_LOG
+#ifdef HAS_LOG
         CHECK(config_file.hasKey("LAYER")) << "MISSING NETWORK EXTRACTOR LAYER. PARAMETER: LAYER";
 #endif
         extractor_layer = config_file.getValueForKey("LAYER");
-#if HAS_LOG
+#ifdef HAS_LOG
         CHECK(config_file.hasKey("IMAGE_HEIGHT")) << "MISSING IMAGE HEIGHT. PARAMETER: IMAGE_HEIGHT";
         CHECK(config_file.hasKey("IMAGE_WIDTH")) << "MISSING IMAGE WIDTH. PARAMETER: IMAGE_WIDTH";
 #endif
-#if HAS_LOG
+#ifdef HAS_LOG
         CHECK(config_file.hasKey("ARCHITECTURE")) << "MISSING NETWORK ARCHITECTURE FILE. PARAMETER: ARCHITECTURE";
 #endif
         std::string architecture = config_file.getValueForKey("ARCHITECTURE");
-#if HAS_LOG
+#ifdef HAS_LOG
         CHECK(config_file.hasKey("MODEL")) << "MISSING NETWORK MODEL FILE. PARAMETER: MODEL";
 #endif
         try {
@@ -175,17 +175,17 @@ namespace descriptor {
             architecture = base_dir+"/"+architecture;
         }
 
-#if CPU_ONLY
+#ifdef CPU_ONLY
         caffe::Caffe::set_mode(caffe::Caffe::CPU);
 #else
         caffe::Caffe::set_mode(caffe::Caffe::GPU);
 #endif
-#if HAS_LOG
+#ifdef HAS_LOG
         LOG(INFO) << "STARTING NETWORK LOADING";
 #endif
         net = new caffe::Net<float>(architecture, caffe::TEST);
         net->CopyTrainedLayersFrom(model);
-#if HAS_LOG
+#ifdef HAS_LOG
         LOG(INFO) << "NETWORK FINISHED LOADING";
 #endif
     }

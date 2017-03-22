@@ -133,7 +133,7 @@ int main(int argc, char *argv[]){
         std::string output_file_name = FLAGS_output_dir+"/"+query_name;
         writeResult(output_file_name, query_name, query_descriptor_object.getImageClass(), min_heap, descriptors);
     }
-
+    descriptors.destroyDescriptors();
     return 0;
 
 
