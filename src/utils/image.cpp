@@ -39,6 +39,7 @@ namespace descriptor {
         datum.set_channels(number_of_channels);
         datum.set_height(height);
         datum.set_width(width);
+        datum.set_label(1);//Any Label
         std::string buffer(static_cast<size_t>(number_of_channels * height * width), ' ');
         int previous_number_channels = 0;
         for (std::vector<cv::Mat>::iterator it = cv_images.begin(); it != cv_images.end(); ++it) {

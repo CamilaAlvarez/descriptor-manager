@@ -57,7 +57,7 @@ namespace descriptor {
         caffe::MemoryDataLayer<float> *memory_data_layer =
                 (caffe::MemoryDataLayer<float> *)net->layer_by_name(memory_data_layer_name).get();
         memory_data_layer->AddDatumVector(datum_vector);
-        net->Forward(&loss);
+        net->ForwardPrefilled(&loss);
         const boost::shared_ptr<caffe::Blob<float>> &descriptor_blob = net->blob_by_name(
                 extractor_layer);
         const float *descriptor_data = descriptor_blob->cpu_data();
