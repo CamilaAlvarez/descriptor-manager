@@ -19,11 +19,13 @@ namespace descriptor {
             number_images++;
             std::vector<std::string> splitted_line;
             size_t separator_position = line.find(separator);
+            std::string aux_line = line;
             while (separator_position != std::string::npos) {
-                std::string line_part = line.substr(0, separator_position);
-                std::string line_rest = line.substr(separator_position + 1);
+                std::string line_part = aux_line.substr(0, separator_position);
+                std::string line_rest = aux_line.substr(separator_position + 1);
                 splitted_line.push_back(line_part);
                 separator_position = line_rest.find(separator);
+                aux_line = line_rest;
             }
 #if HAS_LOG
             CHECK(number_images_per_line + 2 == splitted_line.size()) << "REAL NUMBER OF ARGUMENTS DOESN'T MATCH EXPECTED ONE";
