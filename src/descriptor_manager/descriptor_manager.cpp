@@ -54,10 +54,11 @@ namespace descriptor {
         std::vector<caffe::Datum> datum_vector;
         datum_vector.push_back(datum);
         float loss;
-        caffe::MemoryDataLayer<float> *memory_data_layer =
-                (caffe::MemoryDataLayer<float> *)net->layer_by_name(memory_data_layer_name).get();
+        const boost::shared_ptr<caffe::Layer<float> > memory_layer = net->layer_by_name(memory_data_layer_name);
+        const boost::shared_ptr<caffe::MemoryDataLayer<float>> memory_data_layer =
+                boost::static_pointer_cast<caffe::MemoryDataLayer<float>>(memory_layer);
         memory_data_layer->AddDatumVector(datum_vector);
-        net->ForwardPrefilled(&loss);
+        net->Forward(&loss);
         const boost::shared_ptr<caffe::Blob<float>> &descriptor_blob = net->blob_by_name(
                 extractor_layer);
         const float *descriptor_data = descriptor_blob->cpu_data();
