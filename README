@@ -1,0 +1,8 @@
+# Tipical commands
+
+./bin/run_retrieval_experiment --images_file /home/calvarez/evaluation_test/images.txt --queries /home/calvarez/evaluation_test/queries.txt  --retrieved_items /home/calvarez/evaluation_test/retrieval.txt --output_dir /home/calvarez/evaluation_test/example --network_config /home/calvarez/evaluation_test/exampleConfigFile.config 
+
+./bin/compute_descriptors --images_file /home/calvarez/evaluation_test/images.txt --output_file /home/calvarez/evaluation_test/AlexNetFc7-clothing-finetuning.bin --network_config /home/calvarez/evaluation_test/exampleConfigFile.config 
+
+./bin/run_retrieval_experiments_with_descriptors --descriptors_file /home/calvarez/evaluation_test/AlexNetFc7-clothing-finetuning.bin --queries /home/calvarez/evaluation_test/queries.txt  --retrieved_items /home/calvarez/evaluation_test/retrieval.txt --output_dir /home/calvarez/evaluation_test/example 
+

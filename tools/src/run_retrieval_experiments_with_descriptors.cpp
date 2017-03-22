@@ -79,7 +79,7 @@ static float calculateDistance(float *v, float *u, int size){
 int main(int argc, char *argv[]) {
     FLAGS_logtostderr = 1;
     gflags::SetUsageMessage("command line brew\n"
-                                    "usage: run_retrieval_experiment_with_descriptors \n"
+                                    "usage: run_retrieval_experiments_with_descriptors \n"
                                     "--descriptors_file <descriptors file path>\n "
                                     "--queries <queries file>\n "
                                     "--retrieved_items <retrieved items list file>\n "
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
     ::google::InitGoogleLogging(argv[0]);
     ::gflags::ParseCommandLineFlags(&argc, &argv, true);
     if (!checkValidFlags()) {
-        gflags::ShowUsageWithFlagsRestrict(argv[0], "run_retrieval_experiment_with_descriptors");
+        gflags::ShowUsageWithFlagsRestrict(argv[0], "run_retrieval_experiments_with_descriptors");
         return 1;
     }
 
