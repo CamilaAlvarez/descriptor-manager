@@ -12,6 +12,9 @@ namespace descriptor {
         std::ifstream image_file(images_file);
         std::string line;
         number_images = 0;
+#if HAS_LOG
+        LOG(INFO) << "LOADING IMAGES";
+#endif
         while (std::getline(image_file, line)) {
             number_images++;
             std::vector<std::string> splitted_line;
@@ -29,7 +32,13 @@ namespace descriptor {
                                                  splitted_line.begin() + number_images_per_line + 1);
             images.push_back(Image(splitted_line[0], total_number_channels, images_list, splitted_line.back(),
                                    expected_size));
+#if HAS_LOG
+            LOG(INFO) << "LOADED "+ std::to_string(number_images)+" IMAGES";
+#endif
         }
+#if HAS_LOG
+        LOG(INFO) << "FINISHED LOADING IMAGES";
+#endif
     }
 
     caffe::Datum ImageFile::getImageDatum(int index) {
