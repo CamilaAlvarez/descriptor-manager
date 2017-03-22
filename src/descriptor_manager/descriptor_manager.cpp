@@ -151,7 +151,7 @@ namespace descriptor {
         extractor_layer = config_file.getValueForKey("LAYER");
 
         if(config_file.hasKey("MEMORY_LAYER")){
-            memory_data_layer_name = config_file.getValueForKey("LAYER");
+            memory_data_layer_name = config_file.getValueForKey("MEMORY_LAYER");
         }
         else{
             memory_data_layer_name = "data";
