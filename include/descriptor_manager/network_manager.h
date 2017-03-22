@@ -2,8 +2,8 @@
 // Created by Camila Alvarez on 13-03-17.
 //
 
-#ifndef DESCRIPTOR_MANAGER_DESCRIPTORMANAGER_HPP
-#define DESCRIPTOR_MANAGER_DESCRIPTORMANAGER_HPP
+#ifndef NETWORK_MANAGER_NetworkManager_HPP
+#define NETWORK_MANAGER_NetworkManager_HPP
 
 #include <iostream>
 #include "caffe/caffe.hpp"
@@ -14,12 +14,12 @@
 #include "utils/image_file.h"
 
 namespace descriptor {
-    class DescriptorManager {
+    class NetworkManager {
 
     public:
-        explicit DescriptorManager(const std::string &network_config_file, const std::string& separator);
+        explicit NetworkManager(const std::string &network_config_file, const std::string& separator);
 
-        explicit DescriptorManager(const ConfigFile& config_file);
+        explicit NetworkManager(const ConfigFile& config_file);
 
         float *calculateDescriptorForImage(const cv::Mat &image, bool normalized=true);
 
@@ -44,6 +44,9 @@ namespace descriptor {
                                                          const std::string &separator="\t", int number_images_per_line=1,
                                                          int total_number_channels=3);
 
+        void calculateAndWriteDescriptorsForImagesInFile(ImageFile image_file, const std::string &outfile,
+                                                         bool normalized=true);
+
         cv::Size getExpectedImageSize();
 
     private:
@@ -57,4 +60,4 @@ namespace descriptor {
 }
 
 
-#endif //DESCRIPTOR_MANAGER_DESCRIPTORMANAGER_HPP
+#endif //NETWORK_MANAGER_NetworkManager_HPP

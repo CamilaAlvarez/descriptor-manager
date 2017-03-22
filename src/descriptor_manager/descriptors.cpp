@@ -12,6 +12,8 @@ namespace descriptor {
 
     typedef std::map<std::string, Descriptor>::iterator map_iter;
 
+    Descriptors::Descriptors() : number_items(0) {}
+
     Descriptors::Descriptors(int number_items) : number_items(number_items) {}
 
     void Descriptors::setDescriptorSize(int descriptor_size) {

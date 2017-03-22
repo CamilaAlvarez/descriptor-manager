@@ -2,7 +2,7 @@
 // Created by Camila Alvarez on 13-03-17.
 //
 
-#include "descriptor_manager/descriptor_manager.h"
+#include "descriptor_manager/network_manager.h"
 #include "caffe/layers/memory_data_layer.hpp"
 #ifdef HAS_GLOG
     #include "glog/logging.h"
@@ -10,16 +10,16 @@
 
 namespace descriptor {
 
-    DescriptorManager::DescriptorManager(const ConfigFile &config_file){
+    NetworkManager::NetworkManager(const ConfigFile &config_file){
         init(config_file);
     }
 
-    DescriptorManager::DescriptorManager(const std::string &network_config_file, const std::string &separator) {
+    NetworkManager::NetworkManager(const std::string &network_config_file, const std::string &separator) {
         ConfigFile config_file = ConfigFile(network_config_file, separator);
         init(config_file);
     }
 
-    float *DescriptorManager::calculateDescriptorForImage(const cv::Mat &image, bool normalized) {
+    float *NetworkManager::calculateDescriptorForImage(const cv::Mat &image, bool normalized) {
         caffe::Datum datum;
         cv::Mat output_image;
         cv::resize(image, output_image, expected_image_size, 0, 0, cv::INTER_CUBIC);
@@ -27,13 +27,13 @@ namespace descriptor {
         return calculateDescriptorForDatum(datum, normalized);
     }
 
-    float *DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum, bool normalized) {
+    float *NetworkManager::calculateDescriptorForDatum(const caffe::Datum &datum, bool normalized) {
 
         Descriptor descriptor_object = calculateDescriptorForDatum(datum, "", normalized);
         return descriptor_object.getDescriptor();
     }
 
-    Descriptor DescriptorManager::calculateDescriptorForImage(const cv::Mat &image, const std::string &image_id,
+    Descriptor NetworkManager::calculateDescriptorForImage(const cv::Mat &image, const std::string &image_id,
                                                               bool normalized, const std::string &image_class) {
         caffe::Datum datum;
         cv::Mat output_image;
@@ -42,7 +42,7 @@ namespace descriptor {
         return calculateDescriptorForDatum(datum, image_id, normalized, image_class);
     }
 
-    Descriptor DescriptorManager::calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id,
+    Descriptor NetworkManager::calculateDescriptorForDatum(const caffe::Datum &datum, const std::string &image_id,
                                                               bool normalized,
                                                               const std::string &image_class) {
 #ifdef HAS_LOG
@@ -85,7 +85,7 @@ namespace descriptor {
         return Descriptor(image_id, descriptor, dimension, image_class);
     }
 
-    Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(const std::string &images_file,
+    Descriptors NetworkManager::calculateDescriptorsForImagesInFile(const std::string &images_file,
                                                                        bool normalized,
                                                                        const std::string &separator,
                                                                        int number_images_per_line,
@@ -95,7 +95,7 @@ namespace descriptor {
         return calculateDescriptorsForImagesInFile(image_file, normalized);
     }
 
-    Descriptors DescriptorManager::calculateDescriptorsForImagesInFile(ImageFile image_file,
+    Descriptors NetworkManager::calculateDescriptorsForImagesInFile(ImageFile image_file,
                                                                        bool normalized) {
         int number_images = image_file.getNumberOfImages();
 #ifdef HAS_LOG
@@ -130,7 +130,7 @@ namespace descriptor {
  *      <desriptor:float[dim]>
  * > [n_items]
  */
-    void DescriptorManager::calculateAndWriteDescriptorsForImagesInFile(const std::string &images_file,
+    void NetworkManager::calculateAndWriteDescriptorsForImagesInFile(const std::string &images_file,
                                                                         const std::string &outfile,
                                                                         bool normalized,
                                                                         const std::string &separator,
@@ -140,11 +140,19 @@ namespace descriptor {
                                                                       number_images_per_line,
                                                                       total_number_channels);
         descriptors.writeDescriptorsToFile(outfile);
+        descriptors.destroyDescriptors();
 
 
     }
 
-    void DescriptorManager::init(ConfigFile config_file) {
+    void NetworkManager::calculateAndWriteDescriptorsForImagesInFile(ImageFile image_file, const std::string &outfile,
+                                                                        bool normalized){
+        Descriptors descriptors = calculateDescriptorsForImagesInFile(image_file, normalized);
+        descriptors.writeDescriptorsToFile(outfile);
+        descriptors.destroyDescriptors();
+    }
+
+    void NetworkManager::init(ConfigFile config_file) {
 #ifdef HAS_LOG
         CHECK(config_file.hasKey("LAYER")) << "MISSING NETWORK EXTRACTOR LAYER. PARAMETER: LAYER";
 #endif
@@ -198,7 +206,7 @@ namespace descriptor {
 #endif
     }
 
-    cv::Size DescriptorManager::getExpectedImageSize() {
+    cv::Size NetworkManager::getExpectedImageSize() {
         return expected_image_size;
     }
 }
