@@ -3,6 +3,7 @@
 //
 
 #include "descriptor_manager/descriptor_manager.h"
+#include "caffe/layers/memory_data_layer.hpp"
 #ifdef HAS_GLOG
     #include "glog/logging.h"
 #endif
@@ -50,16 +51,13 @@ namespace descriptor {
                 +"!="+std::to_string(expected_image_size.width);
         LOG(INFO) << "CALCULATING DESCRIPTOR";
 #endif
-        std::vector<int> image_shape;
-        image_shape.push_back(1);
-        image_shape.push_back(datum.channels());
-        image_shape.push_back(datum.height());
-        image_shape.push_back(datum.width());
-        caffe::Blob<float> *blob = new caffe::Blob<float>(image_shape);
-        std::vector<caffe::Blob<float> *> image_blob;
-        image_blob.push_back(blob);
+        std::vector<caffe::Datum> datum_vector;
+        datum_vector.push_back(datum);
         float loss;
-        net->Forward(image_blob, &loss);
+        caffe::MemoryDataLayer<float> *memory_data_layer =
+                (caffe::MemoryDataLayer<float> *)net->layer_by_name(memory_data_layer_name).get();
+        memory_data_layer->AddDatumVector(datum_vector);
+        net->Forward(&loss);
         const boost::shared_ptr<caffe::Blob<float>> &descriptor_blob = net->blob_by_name(
                 extractor_layer);
         const float *descriptor_data = descriptor_blob->cpu_data();
@@ -150,6 +148,13 @@ namespace descriptor {
         CHECK(config_file.hasKey("LAYER")) << "MISSING NETWORK EXTRACTOR LAYER. PARAMETER: LAYER";
 #endif
         extractor_layer = config_file.getValueForKey("LAYER");
+
+        if(config_file.hasKey("MEMORY_LAYER")){
+            memory_data_layer_name = config_file.getValueForKey("LAYER");
+        }
+        else{
+            memory_data_layer_name = "data";
+        }
 #ifdef HAS_LOG
         CHECK(config_file.hasKey("IMAGE_HEIGHT")) << "MISSING IMAGE HEIGHT. PARAMETER: IMAGE_HEIGHT";
         CHECK(config_file.hasKey("IMAGE_WIDTH")) << "MISSING IMAGE WIDTH. PARAMETER: IMAGE_WIDTH";

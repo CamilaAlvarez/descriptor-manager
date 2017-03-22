@@ -49,6 +49,7 @@ namespace descriptor {
     private:
         caffe::Net<float> *net;
         std::string extractor_layer;
+        std::string memory_data_layer_name;
         cv::Size expected_image_size;
 
         void init(ConfigFile config_file);
