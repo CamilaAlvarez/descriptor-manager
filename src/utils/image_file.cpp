@@ -38,7 +38,8 @@ namespace descriptor {
             images.push_back(Image(splitted_line[0], total_number_channels, images_list, splitted_line.back(),
                                    expected_size));
 #if HAS_LOG
-            LOG(INFO) << "LOADED "+ std::to_string(number_images)+" IMAGES";
+            if(number_images%1000 == 0)
+                LOG(INFO) << "LOADED "+ std::to_string(number_images)+" IMAGES";
 #endif
         }
 #if HAS_LOG

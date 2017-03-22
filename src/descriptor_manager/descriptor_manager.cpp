@@ -46,7 +46,7 @@ namespace descriptor {
                                                               const std::string &image_class) {
 #ifdef HAS_LOG
         CHECK(datum.height() == expected_image_size.height && datum.width() == expected_image_size.width) << "INVALID IMAGE DIMENSIONS. "+
-                std::to_string(datum.height())+"!=" +std::to_string(expected_image_size.height)+" or" + std::to_string(datum.width())
+                std::to_string(datum.height())+"!=" +std::to_string(expected_image_size.height)+" or " + std::to_string(datum.width())
                 +"!="+std::to_string(expected_image_size.width);
         LOG(INFO) << "CALCULATING DESCRIPTOR";
 #endif
