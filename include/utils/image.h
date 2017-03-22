@@ -15,7 +15,7 @@ namespace descriptor {
     class Image {
     public:
         Image(const std::string &image_id, int number_channels, const std::vector<std::string> &image_parts,
-              const std::string &image_class);
+              const std::string &image_class, const cv::Size &expected_size);
 
         caffe::Datum getImageDatum();
 
@@ -31,7 +31,7 @@ namespace descriptor {
         int number_of_channels;
         std::vector<std::string> image_parts;
         std::vector<cv::Mat> cv_images;
-        cv::Size max_size;
+        cv::Size expected_size;
 
         void loadImages();
     };

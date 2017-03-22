@@ -13,6 +13,9 @@ namespace descriptor {
     class Descriptors {
 
     public:
+
+        Descriptors();
+
         Descriptors(int number_items);
 
         void setDescriptorSize(int descriptor_size);

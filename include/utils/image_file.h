@@ -15,9 +15,10 @@ namespace descriptor {
     class ImageFile {
     public:
         ImageFile(const std::string &images_file,
-                  const std::string &separator,
+                  const cv::Size &expected_size,
                   int number_images_per_line = 1,
-                  int total_number_channels = 3);
+                  int total_number_channels = 3,
+                  const std::string &separator = "\t");
 
         int getNumberOfImages();
 
@@ -32,6 +33,7 @@ namespace descriptor {
     private:
         int number_images;
         std::vector<Image> images;
+        cv::Size expected_image_size;
 
     };
 

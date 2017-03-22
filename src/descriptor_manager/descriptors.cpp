@@ -12,6 +12,8 @@ namespace descriptor {
 
     typedef std::map<std::string, Descriptor>::iterator map_iter;
 
+    Descriptors::Descriptors() : number_items(0) {}
+
     Descriptors::Descriptors(int number_items) : number_items(number_items) {}
 
     void Descriptors::setDescriptorSize(int descriptor_size) {
@@ -19,7 +21,7 @@ namespace descriptor {
     }
 
     void Descriptors::addDescriptor(const std::string &image_id, const Descriptor &descriptor) {
-#if HAS_LOG
+#ifdef HAS_LOG
         LOG_IF(WARNING, descriptors.find(image_id) != descriptors.end()) << "THERE IS A  SAVED DESCRIPTOR WITH THE SAME IMAGE ID";
 #endif
         descriptors[image_id] = descriptor;
@@ -34,6 +36,9 @@ namespace descriptor {
     }
 
     Descriptor Descriptors::getDescriptor(const std::string &image_id) {
+#if HAS_LOG
+        CHECK(descriptors.find(image_id) != descriptors.end()) << "THERE ARE NOT DESCRIPTORS FOR THAT IMAGE ID";
+#endif
         return descriptors[image_id];
     }
 
@@ -48,7 +53,7 @@ namespace descriptor {
         std::ofstream output;
         output.open(outfile, std::ios::out | std::ios::binary);
 
-#if HAS_LOG
+#ifdef HAS_LOG
         CHECK(output.is_open()) << "COULD NOT OPEN OUTPUT FILE";
         LOG(INFO) << "WRITING DESCRIPTORS IN FILE";
 #endif
@@ -68,16 +73,17 @@ namespace descriptor {
             float *descriptor_array = d.getDescriptor();
             output.write(reinterpret_cast<char *>(descriptor_array), sizeof(descriptor_array[0]) * descriptors_size);
         }
-    }
-
-#if HAS_LOG
+#ifdef HAS_LOG
         LOG(INFO) << "FINISHED WRITING DESCRIPTORS IN FILE";
 #endif
+    }
+
+
 
     void Descriptors::loadDescriptorsFromFile(const std::string &infile) {
         std::ifstream input_file;
         input_file.open(infile, std::ios::in | std::ios::binary);
-#if HAS_LOG
+#ifdef HAS_LOG
         LOG_IF(WARNING, descriptors.size() > 0) << "THIS WILL OVERWRITE CURRENT DESCRIPTORS";
         CHECK(input_file.is_open()) << "COULD NOT OPEN OUTPUT FILE";
         LOG(INFO) << "LOADING DESCRIPTORS";
@@ -103,9 +109,10 @@ namespace descriptor {
             input_file.read(reinterpret_cast<char *>(descriptor), sizeof(descriptor[0]) * descriptors_size);
             descriptors[image_id] = Descriptor(image_id, descriptor, descriptors_size, image_class);
         }
-    }
-#if HAS_LOG
+#ifdef HAS_LOG
         LOG(INFO) << "FINISHED LOADING DESCRIPTORS";
 #endif
+    }
+
 }
 
