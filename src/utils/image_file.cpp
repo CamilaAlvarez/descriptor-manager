@@ -27,6 +27,8 @@ namespace descriptor {
                 separator_position = line_rest.find(separator);
                 aux_line = line_rest;
             }
+            //Add last element
+            splitted_line.push_back(aux_line);
 #if HAS_LOG
             CHECK(number_images_per_line + 2 == splitted_line.size()) << "REAL NUMBER OF ARGUMENTS DOESN'T MATCH EXPECTED ONE. "+
                     std::to_string(number_images_per_line + 2)+ "!="+ std::to_string(splitted_line.size());
