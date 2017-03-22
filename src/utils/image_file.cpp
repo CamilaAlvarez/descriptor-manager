@@ -28,7 +28,8 @@ namespace descriptor {
                 aux_line = line_rest;
             }
 #if HAS_LOG
-            CHECK(number_images_per_line + 2 == splitted_line.size()) << "REAL NUMBER OF ARGUMENTS DOESN'T MATCH EXPECTED ONE";
+            CHECK(number_images_per_line + 2 == splitted_line.size()) << "REAL NUMBER OF ARGUMENTS DOESN'T MATCH EXPECTED ONE. "+
+                    std::to_string(number_images_per_line + 2)+ "!="+ std::to_string(splitted_line.size());
 #endif
             std::vector<std::string> images_list(splitted_line.begin() + 1,
                                                  splitted_line.begin() + number_images_per_line + 1);

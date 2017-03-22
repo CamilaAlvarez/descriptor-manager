@@ -24,7 +24,8 @@ namespace descriptor {
             cv_images.push_back(image);
         }
 #ifdef HAS_LOG
-        CHECK(current_number_channel == number_of_channels) << "REAL NUMBER OF CHANNELS DOESN'T MATCH EXPECTED NUMBER";
+        CHECK(current_number_channel == number_of_channels) << "REAL NUMBER OF CHANNELS DOESN'T MATCH EXPECTED NUMBER. "+
+                std::to_string(current_number_channel)+"!="+std::to_string(number_of_channels);
 #endif
     }
 
@@ -65,7 +66,8 @@ namespace descriptor {
             loadImages();
         if(cv_images.size() == 1){
 #ifdef HAS_LOG
-            CHECK(number_of_channels != cv_images[0].channels()) << "NUMBER OF CHANNELS DIFFERENT THAN EXPECTED";
+            CHECK(number_of_channels != cv_images[0].channels()) << "NUMBER OF CHANNELS DIFFERENT THAN EXPECTED. "+
+                    std::to_string(number_of_channels)+"!="+std::to_string(cv_images[0].channels());
 #endif
             return cv_images[0];
         }
