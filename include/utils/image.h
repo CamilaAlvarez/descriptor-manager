@@ -30,10 +30,9 @@ namespace descriptor {
         std::string image_class;
         int number_of_channels;
         std::vector<std::string> image_parts;
-        std::vector<cv::Mat> cv_images;
         cv::Size expected_size;
 
-        void loadImages();
+        std::vector<cv::Mat> loadImages();
     };
 }
 

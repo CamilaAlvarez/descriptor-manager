@@ -15,8 +15,9 @@ namespace descriptor {
             image_id(image_id), number_of_channels(number_channels), image_parts(image_parts),
             image_class(image_class), expected_size(expected_size) {}
 
-    void Image::loadImages() {
+    std::vector<cv::Mat> Image::loadImages() {
         int current_number_channel = 0;
+        std::vector<cv::Mat> cv_images;
         for (std::vector<std::string>::iterator it = image_parts.begin(); it != image_parts.end(); ++it) {
             cv::Mat image = cv::imread(*it);
             current_number_channel += image.channels();
@@ -27,12 +28,11 @@ namespace descriptor {
         CHECK(current_number_channel == number_of_channels) << "REAL NUMBER OF CHANNELS DOESN'T MATCH EXPECTED NUMBER. "+
                 std::to_string(current_number_channel)+"!="+std::to_string(number_of_channels);
 #endif
+        return cv_images;
     }
 
     caffe::Datum Image::getImageDatum() {
-        if (cv_images.size() == 0)
-            loadImages();
-
+        std::vector<cv::Mat> cv_images = loadImages();
         caffe::Datum datum;
         int height = expected_size.height;
         int width = expected_size.width;
@@ -63,8 +63,8 @@ namespace descriptor {
     }
 
     cv::Mat Image::getImageCVMat() {
-        if (cv_images.size() == 0)
-            loadImages();
+
+        std::vector<cv::Mat> cv_images = loadImages();
         if(cv_images.size() == 1){
 #ifdef HAS_LOG
             CHECK(number_of_channels != cv_images[0].channels()) << "NUMBER OF CHANNELS DIFFERENT THAN EXPECTED. "+
