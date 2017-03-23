@@ -49,7 +49,6 @@ namespace descriptor {
         CHECK(datum.height() == expected_image_size.height && datum.width() == expected_image_size.width) << "INVALID IMAGE DIMENSIONS. "+
                 std::to_string(datum.height())+"!=" +std::to_string(expected_image_size.height)+" or " + std::to_string(datum.width())
                 +"!="+std::to_string(expected_image_size.width);
-        LOG(INFO) << "CALCULATING DESCRIPTOR";
 #endif
         std::vector<caffe::Datum> datum_vector;
         datum_vector.push_back(datum);
@@ -65,9 +64,7 @@ namespace descriptor {
         int dimension = descriptor_blob->count();
         float *descriptor = new float[dimension];
         std::copy(descriptor_data, descriptor_data + dimension, descriptor);
-#ifdef HAS_LOG
-        LOG(INFO) << "FINISHED CALCULATING DESCRIPTOR";
-#endif
+
         if(normalized){
             float norm = 0;
             for (int i = 0; i < dimension ; ++i) {
@@ -100,11 +97,16 @@ namespace descriptor {
         int number_images = image_file.getNumberOfImages();
 #ifdef HAS_LOG
         CHECK(number_images > 0) << "THERE ARE NO IMAGES";
+        LOG(INFO) << "CALCULATING DESCRIPTORS FOR "+ std::to_string(number_images)+ " IMAGES";
         LOG(INFO) << "CALCULATING DESCRIPTORS FOR IMAGES IN FILE";
 #endif
         Descriptors descriptors(number_images);
         int descriptor_size = 0;
         for (int i = 0; i < number_images; i++) {
+#ifdef HAS_LOG
+            if(i%1000 == 0)
+                LOG(INFO) << "CALCULATED FOR "+std::to_string(i)+" IMAGES";
+#endif
             caffe::Datum image = image_file.getImageDatum(i);
             std::string image_id = image_file.getImageId(i);
             std::string image_class = image_file.getImageClass(i);
