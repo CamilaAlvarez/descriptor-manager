@@ -110,6 +110,7 @@ int main(int argc, char *argv[]) {
         std::priority_queue<std::pair<std::string, float>, std::vector<std::pair<std::string, float>>,
                 min_heap_comparator> min_heap;
         std::string query_name = *query_it;
+        LOG(INFO) << "Experiment for: "+query_name;
         descriptor::Descriptor query_descriptor_object = descriptors.getDescriptor(query_name);
         int descriptor_size = query_descriptor_object.getDescriptorSize();
         float *query_descriptor = query_descriptor_object.getDescriptor();
@@ -124,6 +125,7 @@ int main(int argc, char *argv[]) {
         }
         std::string output_file_name = FLAGS_output_dir + "/" + query_name;
         writeResult(output_file_name, query_name, query_descriptor_object.getImageClass(), min_heap, descriptors);
+        LOG(INFO) << "Finished for: "+query_name;
     }
     descriptors.destroyDescriptors();
     return 0;
