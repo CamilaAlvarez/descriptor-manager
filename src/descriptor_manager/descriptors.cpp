@@ -37,7 +37,7 @@ namespace descriptor {
 
     Descriptor Descriptors::getDescriptor(const std::string &image_id) {
 #if HAS_LOG
-        CHECK(descriptors.find(image_id) != descriptors.end()) << "THERE ARE NOT DESCRIPTORS FOR THAT IMAGE ID";
+        CHECK(descriptors.find(image_id) != descriptors.end()) << "THERE ARE NOT DESCRIPTORS FOR THAT IMAGE ID: "+image_id;
 #endif
         return descriptors[image_id];
     }
