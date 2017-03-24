@@ -45,6 +45,7 @@ namespace descriptor {
 #if HAS_LOG
         LOG(INFO) << "FINISHED LOADING IMAGES";
 #endif
+        image_file.close();
     }
 
     caffe::Datum ImageFile::getImageDatum(int index) {

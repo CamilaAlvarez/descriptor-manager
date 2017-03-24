@@ -34,6 +34,7 @@ namespace descriptor {
 #endif
             config_map[config_key] = config_value;
         }
+        config_file.close();
     }
 
     std::string ConfigFile::getValueForKey(const std::string &key) {

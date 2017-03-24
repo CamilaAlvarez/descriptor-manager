@@ -76,6 +76,7 @@ namespace descriptor {
 #ifdef HAS_LOG
         LOG(INFO) << "FINISHED WRITING DESCRIPTORS IN FILE";
 #endif
+        output.close();
     }
 
 
@@ -112,6 +113,7 @@ namespace descriptor {
 #ifdef HAS_LOG
         LOG(INFO) << "FINISHED LOADING DESCRIPTORS";
 #endif
+        input_file.close();
     }
 
 }
