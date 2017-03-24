@@ -53,6 +53,7 @@ static void writeResult(const std::string &output_file, const std::string &image
                << "\t" << retrieved_item.second << std::endl;
         rank++;
     }
+    output.close();
 }
 
 static float calculateDistance(float *v, float *u, int size){

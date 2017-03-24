@@ -75,19 +75,22 @@ namespace descriptor {
 #ifdef HAS_LOG
         CHECK(number_of_channels <= 3) << "TO MANY CHANNELS FOR OPENCV MATRIX";
 #endif
-        cv::Mat new_channels[number_of_channels];
+        //One must use new to reserve memory for an array of length dependant on a variable
+        cv::Mat* new_channels = new cv::Mat[number_of_channels];
         int new_channels_index = 0;
         for (std::vector<cv::Mat>::iterator it = cv_images.begin(); it != cv_images.end(); ++it) {
             int number_channels = it->channels();
-            cv::Mat image_channels[number_channels];
+            cv::Mat* image_channels = new cv::Mat[number_channels];
             cv::split(*it, image_channels);
             for (int i = 0; i < number_channels; i++) {
                 new_channels[new_channels_index] = image_channels[i];
                 new_channels_index++;
             }
+            delete[] image_channels;
         }
         cv::Mat output;
         cv::merge(new_channels, static_cast<size_t>(number_of_channels), output);
+        delete[] new_channels;
         return output;
     }
 
