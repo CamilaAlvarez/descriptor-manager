@@ -100,11 +100,13 @@ namespace descriptor {
             input_file.read(reinterpret_cast<char *>(&image_name_size), sizeof(image_name_size));
             int image_class_size;
             input_file.read(reinterpret_cast<char *>(&image_class_size), sizeof(image_class_size));
-            char image_name_array[image_name_size];
+            char image_name_array[image_name_size+1];
             input_file.read(image_name_array, image_name_size);
+            image_name_array[image_name_size] = '\0';
             std::string image_id(image_name_array);
-            char image_class_array[image_class_size];
+            char image_class_array[image_class_size+1];
             input_file.read(image_class_array, image_class_size);
+            image_class_array[image_class_size] = '\0';
             std::string image_class(image_class_array);
             float *descriptor = new float[descriptors_size];
             input_file.read(reinterpret_cast<char *>(descriptor), sizeof(descriptor[0]) * descriptors_size);
