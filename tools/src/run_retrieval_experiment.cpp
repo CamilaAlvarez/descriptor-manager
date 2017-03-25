@@ -10,7 +10,9 @@
 #include "glog/logging.h"
 #include "boost/filesystem.hpp"
 #include "descriptor_manager/network_manager.h"
-
+#ifdef _OPENMP
+    #include <omp.h>
+#endif
 
 DEFINE_string(images_file, "", "Image list with their corresponding id and class");
 DEFINE_int32(images_per_line, 1, "Number of images per line in images file (default = 1)");
@@ -114,12 +116,23 @@ int main(int argc, char *argv[]){
     fillVectorWithFile(FLAGS_queries, queries);
     std::vector<std::string> retrieved_items;
     fillVectorWithFile(FLAGS_retrieved_items, retrieved_items);
-
-    for(std::vector<std::string>::iterator query_it = queries.begin(); query_it != queries.end(); ++query_it){
+    size_t number_queries = queries.size();
+#ifdef _OPENMP
+    omp_lock_t lock;
+    omp_init_lock(&lock);
+#endif
+#pragma omp parallel for num_threads(3)
+    for(int i = 0; i < number_queries ; ++i){
         std::priority_queue<std::pair<std::string, float>, std::vector<std::pair<std::string, float>>,
                 min_heap_comparator> min_heap;
-        std::string query_name = *query_it;
+        std::string query_name = queries[i];
+#ifdef _OPENMP
+        omp_set_lock(&lock);
+#endif
         LOG(INFO) << "Experiment for: "+query_name;
+#ifdef _OPENMP
+        omp_unset_lock(&lock);
+#endif
         descriptor::Descriptor query_descriptor_object = descriptors.getDescriptor(query_name);
         int descriptor_size = query_descriptor_object.getDescriptorSize();
         float *query_descriptor = query_descriptor_object.getDescriptor();
@@ -134,8 +147,17 @@ int main(int argc, char *argv[]){
         }
         std::string output_file_name = FLAGS_output_dir+"/"+query_name;
         writeResult(output_file_name, query_name, query_descriptor_object.getImageClass(), min_heap, descriptors);
+#ifdef _OPENMP
+        omp_set_lock(&lock);
+#endif
         LOG(INFO) << "Finished experiment for: "+query_name;
+#ifdef _OPENMP
+        omp_unset_lock(&lock);
+#endif
     }
+#ifdef _OPENMP
+    omp_destroy_lock(&lock);
+#endif
     descriptors.destroyDescriptors();
     return 0;
 
