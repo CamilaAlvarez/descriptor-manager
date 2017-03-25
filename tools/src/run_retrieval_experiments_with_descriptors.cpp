@@ -10,6 +10,9 @@
 #include "glog/logging.h"
 #include "boost/filesystem.hpp"
 #include "descriptor_manager/network_manager.h"
+#ifdef _OPENMP
+    #include <omp.h>
+#endif
 
 DEFINE_string(descriptors_file,"", "File that contains previously computed descriptors");
 DEFINE_string(queries, "", "Query id list");
