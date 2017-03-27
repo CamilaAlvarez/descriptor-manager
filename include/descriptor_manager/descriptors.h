@@ -20,6 +20,8 @@ namespace descriptor {
 
         void setDescriptorSize(int descriptor_size);
 
+        void setClassForImage(const std::string &image_id, const std::string &class_id);
+
         void addDescriptor(const std::string &image_id, const Descriptor &descriptor);
 
         int getNumberOfItems();

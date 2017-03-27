@@ -118,5 +118,12 @@ namespace descriptor {
         input_file.close();
     }
 
+    void Descriptors::setClassForImage(const std::string &image_id, const std::string &class_id) {
+#ifdef HAS_LOG
+        CHECK(descriptors.find(image_id)!=descriptors.end()) << "IMAGE COULD NOT BE FOUND: "+image_id;
+#endif
+        descriptors[image_id] = Descriptor(image_id, descriptors[image_id].getDescriptor(), descriptors_size,
+                                           class_id);
+    }
 }
 
