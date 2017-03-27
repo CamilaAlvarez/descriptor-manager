@@ -8,8 +8,13 @@ set(CAFFE_CMAKE_DIR /home/calvarez/source/descriptor-manager/caffe/ CACHE STRING
 find_package(Caffe REQUIRED HINTS ${CAFFE_CMAKE_DIR})
 include(cmake/FindGlog.cmake)
 include(cmake/FindGFlags.cmake)
+include(FindOpenMP)
 include_directories("${CMAKE_SOURCE_DIR}/include")
 
+if (OpenMP_FOUND)
+    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS})
+    set(CMAKE_CXX_FLAGS  ${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS})
+endif ()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
