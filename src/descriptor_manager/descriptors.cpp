@@ -29,6 +29,9 @@ namespace descriptor {
     }
 
     int Descriptors::getNumberOfItems() {
+        if(number_items != descriptors.size()){
+            number_items = static_cast<int>(descriptors.size());
+        }
         return number_items;
     }
 
@@ -59,8 +62,12 @@ namespace descriptor {
         CHECK(output.is_open()) << "COULD NOT OPEN OUTPUT FILE";
         LOG(INFO) << "WRITING DESCRIPTORS IN FILE";
 #endif
-        if (selected_images.empty())
+        if (selected_images.empty()) {
+            if(number_items != descriptors.size()){
+                number_items = static_cast<int>(descriptors.size());
+            }
             output.write(reinterpret_cast<char *>(&number_items), sizeof(int));
+        }
         else {
             int items_number = static_cast<int >(selected_images.size());
             output.write(reinterpret_cast<char *>(&items_number), sizeof(int));
@@ -135,6 +142,14 @@ namespace descriptor {
 #endif
         descriptors[image_id] = Descriptor(image_id, descriptors[image_id].getDescriptor(), descriptors_size,
                                            class_id);
+    }
+
+    void Descriptors::includeDescriptors(const Descriptors &extra_descriptors) {
+        LOG_IF( WARNING, extra_descriptors.descriptors.size()!=0) << "NO DESCRIPTORS WILL BE ADDED";
+        for(std::map<std::string, Descriptor>::const_iterator it = extra_descriptors.descriptors.begin();
+            it != extra_descriptors.descriptors.end(); ++it){
+            addDescriptor(it->first, it->second);
+        }
     }
 
 }

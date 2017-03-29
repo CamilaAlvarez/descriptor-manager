@@ -38,6 +38,8 @@ namespace descriptor {
 
         void loadDescriptorsFromFile(const std::string &infile);
 
+        void includeDescriptors(const Descriptors &extra_descriptors);
+
 
     private:
         int descriptors_size;
