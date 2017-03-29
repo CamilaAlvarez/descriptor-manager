@@ -59,7 +59,12 @@ namespace descriptor {
         CHECK(output.is_open()) << "COULD NOT OPEN OUTPUT FILE";
         LOG(INFO) << "WRITING DESCRIPTORS IN FILE";
 #endif
-        output.write(reinterpret_cast<char *>(&number_items), sizeof(int));
+        if (selected_images.empty())
+            output.write(reinterpret_cast<char *>(&number_items), sizeof(int));
+        else {
+            int items_number = static_cast<int >(selected_images.size());
+            output.write(reinterpret_cast<char *>(&items_number), sizeof(int));
+        }
         output.write(reinterpret_cast<char *>(&descriptors_size), sizeof(int));
         for (map_iter it = descriptors.begin(); it != descriptors.end(); ++it) {
             if(!selected_images.empty() &&
