@@ -4,6 +4,7 @@
 
 #include "descriptor_manager/descriptors.h"
 #include <fstream>
+#include <algorithm>
 #ifdef HAS_GLOG
     #include "glog/logging.h"
 #endif
@@ -49,7 +50,8 @@ namespace descriptor {
         }
     }
 
-    void Descriptors::writeDescriptorsToFile(const std::string &outfile) {
+    void Descriptors::writeDescriptorsToFile(const std::string &outfile,
+                                             const std::vector<std::string> &selected_images) {
         std::ofstream output;
         output.open(outfile, std::ios::out | std::ios::binary);
 
@@ -60,6 +62,10 @@ namespace descriptor {
         output.write(reinterpret_cast<char *>(&number_items), sizeof(int));
         output.write(reinterpret_cast<char *>(&descriptors_size), sizeof(int));
         for (map_iter it = descriptors.begin(); it != descriptors.end(); ++it) {
+            if(!selected_images.empty() &&
+                    std::find(selected_images.begin(), selected_images.end(), it->first) == selected_images.end()) {
+                continue;
+            }
             std::string image_id = it->first;
             Descriptor d = it->second;
             std::string image_class = d.getImageClass();
@@ -125,5 +131,6 @@ namespace descriptor {
         descriptors[image_id] = Descriptor(image_id, descriptors[image_id].getDescriptor(), descriptors_size,
                                            class_id);
     }
+
 }
 

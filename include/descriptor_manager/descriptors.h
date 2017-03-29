@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 #include "descriptor.h"
 
 namespace descriptor {
@@ -32,9 +33,11 @@ namespace descriptor {
 
         void destroyDescriptors();
 
-        void writeDescriptorsToFile(const std::string &outfile);
+        void writeDescriptorsToFile(const std::string &outfile,
+                                    const std::vector<std::string> &selected_images = std::vector<std::string>());
 
         void loadDescriptorsFromFile(const std::string &infile);
+
 
     private:
         int descriptors_size;
