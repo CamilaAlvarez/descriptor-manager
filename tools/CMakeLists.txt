@@ -1,5 +1,6 @@
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 add_executable(run_retrieval_experiment ${CMAKE_CURRENT_SOURCE_DIR}/src/run_retrieval_experiment.cpp)
+add_executable(run_classification_experiment ${CMAKE_CURRENT_SOURCE_DIR}/src/run_classification_experiment.cpp)
 add_executable(compute_descriptors ${CMAKE_CURRENT_SOURCE_DIR}/src/compute_descriptors.cpp)
 add_executable(run_retrieval_experiment_with_descriptors ${CMAKE_CURRENT_SOURCE_DIR}/src/run_retrieval_experiments_with_descriptors.cpp)
 add_executable(change_class_in_descriptor_file ${CMAKE_CURRENT_SOURCE_DIR}/src/change_class_in_descriptor_file.cpp)
