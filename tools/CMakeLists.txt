@@ -23,6 +23,9 @@ endif ()
 target_include_directories(run_retrieval_experiment PRIVATE ${GFLAGS_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 target_link_libraries(run_retrieval_experiment ${GFLAGS_LIBRARIES} ${Boost_LIBRARIES} descriptor_manager )
 
+target_include_directories(run_classification_experiment PRIVATE ${GFLAGS_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
+target_link_libraries(run_classification_experiment ${GFLAGS_LIBRARIES} ${Boost_LIBRARIES} descriptor_manager )
+
 target_include_directories(run_retrieval_experiment_with_descriptors PRIVATE ${GFLAGS_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 target_link_libraries(run_retrieval_experiment_with_descriptors ${GFLAGS_LIBRARIES} ${Boost_LIBRARIES} descriptor_manager )
 

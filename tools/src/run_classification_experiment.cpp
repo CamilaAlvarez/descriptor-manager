@@ -136,7 +136,7 @@ int main(int argc, char *argv[]){
         omp_unset_lock(&lock);
 #endif
         descriptor::Descriptor query_descriptor_object = descriptors.getDescriptor(query_name);
-        int query_class = image_file.getImageClass(i);
+        int query_class = std::stoi(image_file.getImageClass(i));
         int descriptor_size = query_descriptor_object.getDescriptorSize();
         float *query_descriptor = query_descriptor_object.getDescriptor();
         int max_index = -1;
